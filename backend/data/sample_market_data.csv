@@ -1,0 +1,22 @@
+market_name,crop,location,date,price_per_kg,arrival_kg,transport_cost_per_kg,handling_cost_per_kg
+Pune APMC,Tomato,Pune,2026-01-01,24.0,12000,1.8,0.2
+Mumbai APMC,Tomato,Mumbai,2026-01-01,27.0,18000,3.4,0.3
+Nagpur APMC,Tomato,Nagpur,2026-01-01,23.0,9500,4.2,0.2
+Pune APMC,Tomato,Pune,2026-01-08,25.0,11500,1.8,0.2
+Mumbai APMC,Tomato,Mumbai,2026-01-08,28.0,17500,3.4,0.3
+Nagpur APMC,Tomato,Nagpur,2026-01-08,24.0,9000,4.2,0.2
+Pune APMC,Tomato,Pune,2026-01-15,24.5,13000,1.8,0.2
+Mumbai APMC,Tomato,Mumbai,2026-01-15,29.0,16500,3.4,0.3
+Nagpur APMC,Tomato,Nagpur,2026-01-15,24.5,9800,4.2,0.2
+Pune APMC,Tomato,Pune,2026-01-22,26.0,11000,1.8,0.2
+Mumbai APMC,Tomato,Mumbai,2026-01-22,28.5,17000,3.4,0.3
+Nagpur APMC,Tomato,Nagpur,2026-01-22,25.0,9200,4.2,0.2
+Pune APMC,Onion,Pune,2026-01-01,18.0,15000,1.8,0.1
+Mumbai APMC,Onion,Mumbai,2026-01-01,21.0,20000,3.4,0.2
+Pune APMC,Onion,Pune,2026-01-08,18.5,14000,1.8,0.1
+Mumbai APMC,Onion,Mumbai,2026-01-08,21.5,19000,3.4,0.2
+Pune APMC,Onion,Pune,2026-01-15,19.0,14500,1.8,0.1
+Mumbai APMC,Onion,Mumbai,2026-01-15,22.0,18500,3.4,0.2
+Pune APMC,Onion,Pune,2026-01-22,19.5,13800,1.8,0.1
+Mumbai APMC,Onion,Mumbai,2026-01-22,22.0,18000,3.4,0.2
+
