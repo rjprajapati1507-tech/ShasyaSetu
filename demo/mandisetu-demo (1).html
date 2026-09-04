@@ -197,6 +197,36 @@ button{font-family:inherit; cursor:pointer;}
 
 .hint-banner{background:var(--amber-100); border:1px solid #E9CE96; color:var(--amber-700); font-size:12.5px; padding:10px 14px; border-radius:8px; margin-bottom:18px; display:flex; gap:8px; align-items:center;}
 
+/* ===== ShasyaSetu: Price intelligence ===== */
+.eyebrow{font-size:11px; font-weight:700; letter-spacing:0.04em; text-transform:uppercase; color:var(--amber-600); margin-bottom:4px;}
+.card h2{font-size:17px; font-weight:600; margin-bottom:2px;}
+.si-hero{margin-bottom:20px;}
+.si-brand{color:var(--green-700); font-weight:700; font-size:13px; margin-bottom:10px;}
+.si-headline{font-size:27px; line-height:1.15; max-width:620px; margin-bottom:8px;}
+.si-sub{color:var(--ink-secondary); font-size:13.5px; max-width:520px; margin-bottom:12px;}
+.si-badge{display:inline-block; background:var(--green-100); color:var(--green-900); font-size:11.5px; font-weight:600; padding:5px 12px; border-radius:999px;}
+.si-workflow{display:flex; gap:8px; align-items:center; margin-top:12px; font-size:12px; color:var(--ink-muted); flex-wrap:wrap;}
+.si-workflow i{font-style:normal;}
+.si-form-desc{color:var(--ink-secondary); font-size:13px; margin:4px 0 14px;}
+.si-field-row{display:flex; gap:14px; flex-wrap:wrap; margin-bottom:2px;}
+.si-field-row .field{flex:1; min-width:150px;}
+.si-note{font-size:12px; color:var(--ink-muted); margin-top:8px;}
+.si-metrics{display:flex; gap:10px; margin-top:14px; flex-wrap:wrap;}
+.si-metric{flex:1; min-width:110px; background:var(--surface-sunk); border-radius:8px; padding:10px 12px;}
+.si-metric span{display:block; font-size:11px; color:var(--ink-muted); margin-bottom:3px;}
+.si-metric strong{font-family:'JetBrains Mono'; font-size:15px;}
+.si-metric-em{background:var(--green-100);}
+.si-calc-row{display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid var(--line); font-size:13.5px;}
+.si-calc-row span{color:var(--ink-secondary);}
+.si-calc-total{border-top:2px solid var(--ink); border-bottom:none; margin-top:4px; padding-top:10px; font-weight:600;}
+.si-table{width:100%; border-collapse:collapse; font-size:13.5px;}
+.si-table th{text-align:left; font-size:11px; text-transform:uppercase; letter-spacing:0.03em; color:var(--ink-muted); padding:8px 10px; border-bottom:1px solid var(--line);}
+.si-table td{padding:10px; border-bottom:1px solid var(--line);}
+.si-table tr:last-child td{border-bottom:none;}
+.si-row-rec{background:var(--green-100);}
+.si-tag{background:var(--green-700); color:#fff; font-size:10.5px; font-weight:600; padding:2px 8px; border-radius:999px; margin-left:6px;}
+.table-wrap{overflow-x:auto;}
+
 @media (max-width:760px){
   .app{flex-direction:column;}
   .sidebar{width:100%; display:flex; overflow-x:auto; border-right:none; border-bottom:1px solid var(--line); padding:10px 12px; gap:6px;}
@@ -255,11 +285,30 @@ button{font-family:inherit; cursor:pointer;}
 
     <!-- ===================== FPO: PRICE INTELLIGENCE ===================== -->
     <div class="view active" id="view-fpo-prices">
-      <div class="page-head">
-        <h1>Price intelligence</h1>
-        <p>Recommended market from the ShasyaSetu prototype API, for a test order of Tomato · 100 kg · from Nashik.</p>
+      <div class="si-hero">
+        <div class="si-brand">✦ ShasyaSetu</div>
+        <h1 class="si-headline">Better market decisions, grounded in clear calculations.</h1>
+        <p class="si-sub">AI-powered agricultural market intelligence for a focused, demo-ready selling recommendation.</p>
+        <span class="si-badge">Prototype using demo/sample market data — not live data</span>
+        <div class="si-workflow"><span>Farmer input</span><i>→</i><span>Price prediction</span><i>→</i><span>Net realisation</span><i>→</i><span>Market ranking</span></div>
       </div>
-      <div class="grid grid-3" id="priceCards"></div>
+
+      <div class="card" style="margin-bottom:16px;">
+        <p class="eyebrow">Step 1</p>
+        <h2>Farmer input</h2>
+        <p class="si-form-desc">Tell us what you want to sell and where you are located.</p>
+        <form id="siForm">
+          <div class="si-field-row">
+            <div class="field"><label>Crop</label><input id="siCrop" value="Tomato" required></div>
+            <div class="field"><label>Quantity (kg)</label><input id="siQty" type="number" min="1" step="1" value="500" required></div>
+            <div class="field"><label>Farmer location</label><input id="siLocation" value="Nashik" required></div>
+          </div>
+          <button type="submit" class="btn btn-primary" id="siSubmit">Get recommendation</button>
+        </form>
+        <p class="si-note">Demo currently supports the sample route from Nashik.</p>
+      </div>
+
+      <div id="siResults"></div>
     </div>
 
     <!-- ===================== FPO: MY LOTS ===================== -->
@@ -562,23 +611,22 @@ function clearModalErrors(id){ document.querySelectorAll('#'+id+' .field-error')
 /* ============================================================
    SHASYASETU API INTEGRATION
    Connects the Price Intelligence section to the real ShasyaSetu
-   FastAPI backend. Fixed test input for this integration step:
-   Tomato, 100 kg, from Nashik (the only combination the sample
-   dataset currently supports).
+   FastAPI backend. The farmer enters crop, quantity and location
+   themselves; the sample dataset currently supports Tomato/Onion
+   from Nashik, so anything else surfaces the API's own error text.
 ============================================================ */
 const SHASYASETU_API_BASE = 'http://127.0.0.1:8000';
-const SHASYASETU_TEST_INPUT = { crop: 'Tomato', quantity_kg: 100, location: 'Nashik' };
 
 let shasyaSetuState = { status: 'loading', data: null, error: null };
 
-async function fetchShasyaSetuRecommendation(){
+async function fetchShasyaSetuRecommendation(input){
   shasyaSetuState = { status: 'loading', data: null, error: null };
   renderPrices();
   try {
     const response = await fetch(`${SHASYASETU_API_BASE}/api/v1/recommendations`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(SHASYASETU_TEST_INPUT),
+      body: JSON.stringify(input),
     });
     const body = await response.json().catch(() => null);
     if (!response.ok) {
@@ -595,31 +643,38 @@ async function fetchShasyaSetuRecommendation(){
   renderPrices();
 }
 
+document.getElementById('siForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+  fetchShasyaSetuRecommendation({
+    crop: document.getElementById('siCrop').value.trim(),
+    quantity_kg: Number(document.getElementById('siQty').value),
+    location: document.getElementById('siLocation').value.trim(),
+  });
+});
+
 /* ============================================================
    RENDER: PRICE INTELLIGENCE
 ============================================================ */
 function renderPrices(){
-  const wrap = document.getElementById('priceCards');
+  const wrap = document.getElementById('siResults');
+  if (!wrap) return;
   const state = shasyaSetuState;
 
+  const submitBtn = document.getElementById('siSubmit');
+  if (submitBtn) {
+    submitBtn.disabled = state.status === 'loading';
+    submitBtn.textContent = state.status === 'loading' ? 'Finding markets…' : 'Get recommendation';
+  }
+
   if (state.status === 'loading') {
-    wrap.innerHTML = `<div class="card">
-      <h3>Tomato</h3>
-      <div style="font-size:12px;color:var(--ink-muted);margin-bottom:10px;">100 kg · from Nashik</div>
-      <div class="hint-banner">Fetching recommendation from the ShasyaSetu API…</div>
-    </div>`;
+    wrap.innerHTML = `<div class="card"><div class="hint-banner">Fetching recommendation from the ShasyaSetu API…</div></div>`;
     return;
   }
 
   if (state.status === 'error') {
     wrap.innerHTML = `<div class="card">
-      <h3>Tomato</h3>
-      <div style="font-size:12px;color:var(--ink-muted);margin-bottom:10px;">100 kg · from Nashik</div>
       <div class="hint-banner" style="background:var(--red-100); border-color:var(--red-100); color:var(--red-700);">
-        Recommendation unavailable — ${state.error} Start the ShasyaSetu FastAPI backend (uvicorn backend.app.main:app) and retry.
-      </div>
-      <div class="lot-actions">
-        <button class="btn btn-secondary btn-sm" onclick="fetchShasyaSetuRecommendation()">Retry</button>
+        Recommendation unavailable — ${state.error}
       </div>
     </div>`;
     return;
@@ -627,22 +682,47 @@ function renderPrices(){
 
   const result = state.data;
   const rec = result.recommendation;
-  wrap.innerHTML = `<div class="card">
-    <h3>${result.crop}</h3>
-    <div style="font-size:12px;color:var(--ink-muted);margin-bottom:10px;">${result.quantity_kg} kg · from ${result.origin}</div>
-    <div class="hint-banner">${result.data_source}</div>
-    ${result.markets.map(m=>`<div class="mandi-row">
-        <span class="mandi-name">${m.market}</span>
-        <span class="mandi-price">₹${m.expected_price_per_kg.toFixed(2)}/kg</span>
-      </div>`).join('')}
-    <div class="reco sell">
-      <div class="reco-icon">✓</div>
-      <div>
-        <b>Recommended market: ${rec.market}</b>
-        <p>Highest expected net realisation: ₹${rec.expected_net_realisation_per_kg.toFixed(2)}/kg (₹${rec.expected_net_realisation_total.toFixed(2)} total for ${result.quantity_kg} kg) after sample transport and handling costs.</p>
+  wrap.innerHTML = `
+    <span class="si-badge" style="margin-bottom:14px;">${result.data_source}</span>
+    <div class="grid grid-2" style="margin-top:14px; margin-bottom:16px;">
+      <div class="card">
+        <p class="eyebrow">Recommended market</p>
+        <h2>${rec.market}</h2>
+        <p class="si-form-desc">It has the highest expected net realisation after the sample transport and handling costs are deducted.</p>
+        <div class="si-metrics">
+          <div class="si-metric"><span>Expected price / kg</span><strong>₹${rec.expected_price_per_kg.toFixed(2)}</strong></div>
+          <div class="si-metric"><span>Transport / kg</span><strong>₹${rec.transport_cost_per_kg.toFixed(2)}</strong></div>
+          <div class="si-metric si-metric-em"><span>Expected net / kg</span><strong>₹${rec.expected_net_realisation_per_kg.toFixed(2)}</strong></div>
+        </div>
+      </div>
+      <div class="card">
+        <p class="eyebrow">Calculation</p>
+        <h2>Expected net realisation</h2>
+        <div class="si-calc-row"><span>Expected selling price</span><strong>₹${rec.expected_price_per_kg.toFixed(2)} / kg</strong></div>
+        <div class="si-calc-row"><span>− Transportation cost</span><strong>₹${rec.transport_cost_per_kg.toFixed(2)} / kg</strong></div>
+        <div class="si-calc-row"><span>− Relevant costs</span><strong>₹${rec.handling_cost_per_kg.toFixed(2)} / kg</strong></div>
+        <div class="si-calc-row si-calc-total"><span>= Expected net realisation</span><strong>₹${rec.expected_net_realisation_per_kg.toFixed(2)} / kg</strong></div>
       </div>
     </div>
-  </div>`;
+    <div class="card">
+      <p class="eyebrow">Step 2</p>
+      <h2>Market comparison</h2>
+      <p class="si-form-desc">Markets are ranked by expected net realisation for ${result.quantity_kg} kg.</p>
+      <div class="table-wrap">
+        <table class="si-table">
+          <thead><tr><th>Market</th><th>Expected price</th><th>Transport cost</th><th>Expected net realisation</th></tr></thead>
+          <tbody>
+            ${result.markets.map(m=>`<tr class="${m.market===rec.market?'si-row-rec':''}">
+              <td>${m.market}${m.market===rec.market?' <span class="si-tag">Recommended</span>':''}</td>
+              <td>₹${m.expected_price_per_kg.toFixed(2)} / kg</td>
+              <td>₹${m.transport_cost_per_kg.toFixed(2)} / kg</td>
+              <td><strong>₹${m.expected_net_realisation_per_kg.toFixed(2)} / kg</strong></td>
+            </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
 }
 
 /* ============================================================
@@ -957,7 +1037,11 @@ function renderAll(){
   renderBuyerOffers();
   renderOrders('buyerOrdersList');
 }
-fetchShasyaSetuRecommendation();
+fetchShasyaSetuRecommendation({
+  crop: document.getElementById('siCrop').value,
+  quantity_kg: Number(document.getElementById('siQty').value),
+  location: document.getElementById('siLocation').value,
+});
 renderAll();
 </script>
 </body>
