@@ -1,0 +1,286 @@
+{
+  "success": true,
+  "message": "Data fetched successfully.",
+  "title": "Market-wise Wholesale Prices Weekly Analysis for Onion in Nashik, Maharashtra – Week 2 of April, 2025",
+  "data": [
+    {
+      "key": "region_info",
+      "columns": [
+        {
+          "key": "market",
+          "title": "Market"
+        }
+      ]
+    },
+    {
+      "key": "prices",
+      "columns": [
+        {
+          "key": "prices_9_15_apr_2025",
+          "title": "Prices 9-15 Apr 2025 (Rs./Quintal)"
+        },
+        {
+          "key": "prices_1_8_apr_2025",
+          "title": "Prices 1-8 Apr 2025 (Rs./Quintal)"
+        },
+        {
+          "key": "prices_9_15_mar_2025",
+          "title": "Prices 9-15 Mar 2025 (Rs./Quintal)"
+        },
+        {
+          "key": "prices_9_15_apr_2024",
+          "title": "Prices 9-15 Apr 2024 (Rs./Quintal)"
+        }
+      ]
+    },
+    {
+      "key": "percentage_change",
+      "columns": [
+        {
+          "key": "change_over_previous_week",
+          "title": "Change (Over Previous Week)"
+        },
+        {
+          "key": "change_over_previous_month",
+          "title": "Change (Over Previous Month)"
+        },
+        {
+          "key": "change_over_previous_year",
+          "title": "Change (Over Previous Year)"
+        }
+      ]
+    }
+  ],
+  "rows": [
+    {
+      "market": "APMC Chandwad ",
+      "prices_9_15_apr_2025": 1012.96,
+      "prices_1_8_apr_2025": 1236.88,
+      "prices_9_15_mar_2025": 1466.66,
+      "prices_9_15_apr_2024": null,
+      "change_over_previous_week": "-18.1",
+      "change_over_previous_month": "-30.9",
+      "change_over_previous_year": null
+    },
+    {
+      "market": "APMC Devala ",
+      "prices_9_15_apr_2025": 1181.15,
+      "prices_1_8_apr_2025": 1278.66,
+      "prices_9_15_mar_2025": 1474.53,
+      "prices_9_15_apr_2024": null,
+      "change_over_previous_week": "-7.6",
+      "change_over_previous_month": "-19.9",
+      "change_over_previous_year": null
+    },
+    {
+      "market": "APMC Dindori ",
+      "prices_9_15_apr_2025": 1234.56,
+      "prices_1_8_apr_2025": 1283.99,
+      "prices_9_15_mar_2025": null,
+      "prices_9_15_apr_2024": null,
+      "change_over_previous_week": "-3.9",
+      "change_over_previous_month": null,
+      "change_over_previous_year": null
+    },
+    {
+      "market": "APMC Kalvan ",
+      "prices_9_15_apr_2025": 1115.92,
+      "prices_1_8_apr_2025": 1269.7,
+      "prices_9_15_mar_2025": 1399.37,
+      "prices_9_15_apr_2024": null,
+      "change_over_previous_week": "-12.1",
+      "change_over_previous_month": "-20.3",
+      "change_over_previous_year": null
+    },
+    {
+      "market": "APMC Lasalgaon ",
+      "prices_9_15_apr_2025": 1100.61,
+      "prices_1_8_apr_2025": 1193.0,
+      "prices_9_15_mar_2025": 1627.33,
+      "prices_9_15_apr_2024": 1400.0,
+      "change_over_previous_week": "-7.7",
+      "change_over_previous_month": "-32.4",
+      "change_over_previous_year": "-21.4"
+    },
+    {
+      "market": "APMC Manmad ",
+      "prices_9_15_apr_2025": 957.91,
+      "prices_1_8_apr_2025": 1088.29,
+      "prices_9_15_mar_2025": 1367.26,
+      "prices_9_15_apr_2024": null,
+      "change_over_previous_week": "-12.0",
+      "change_over_previous_month": "-29.9",
+      "change_over_previous_year": null
+    },
+    {
+      "market": "APMC Nampur",
+      "prices_9_15_apr_2025": 1100.0,
+      "prices_1_8_apr_2025": 1012.13,
+      "prices_9_15_mar_2025": 1158.07,
+      "prices_9_15_apr_2024": null,
+      "change_over_previous_week": "8.7",
+      "change_over_previous_month": "-5.0",
+      "change_over_previous_year": null
+    },
+    {
+      "market": "APMC Nandgaon ",
+      "prices_9_15_apr_2025": 800.0,
+      "prices_1_8_apr_2025": 1010.18,
+      "prices_9_15_mar_2025": 1293.79,
+      "prices_9_15_apr_2024": null,
+      "change_over_previous_week": "-20.8",
+      "change_over_previous_month": "-38.2",
+      "change_over_previous_year": null
+    },
+    {
+      "market": "APMC Nasik ",
+      "prices_9_15_apr_2025": 1148.71,
+      "prices_1_8_apr_2025": 1219.82,
+      "prices_9_15_mar_2025": 1658.67,
+      "prices_9_15_apr_2024": 1272.76,
+      "change_over_previous_week": "-5.8",
+      "change_over_previous_month": "-30.8",
+      "change_over_previous_year": "-9.8"
+    },
+    {
+      "market": "APMC Pimpalgaon Baswant ",
+      "prices_9_15_apr_2025": 1080.73,
+      "prices_1_8_apr_2025": 1212.61,
+      "prices_9_15_mar_2025": 1534.5,
+      "prices_9_15_apr_2024": null,
+      "change_over_previous_week": "-10.9",
+      "change_over_previous_month": "-29.6",
+      "change_over_previous_year": null
+    },
+    {
+      "market": "APMC Satana ",
+      "prices_9_15_apr_2025": 1131.01,
+      "prices_1_8_apr_2025": 1225.18,
+      "prices_9_15_mar_2025": 1328.26,
+      "prices_9_15_apr_2024": null,
+      "change_over_previous_week": "-7.7",
+      "change_over_previous_month": "-14.8",
+      "change_over_previous_year": null
+    },
+    {
+      "market": "APMC Sinner ",
+      "prices_9_15_apr_2025": 1146.09,
+      "prices_1_8_apr_2025": 1254.57,
+      "prices_9_15_mar_2025": 1350.0,
+      "prices_9_15_apr_2024": null,
+      "change_over_previous_week": "-8.7",
+      "change_over_previous_month": "-15.1",
+      "change_over_previous_year": null
+    },
+    {
+      "market": "APMC Umrane",
+      "prices_9_15_apr_2025": 1000.0,
+      "prices_1_8_apr_2025": 1100.0,
+      "prices_9_15_mar_2025": null,
+      "prices_9_15_apr_2024": null,
+      "change_over_previous_week": "-9.1",
+      "change_over_previous_month": null,
+      "change_over_previous_year": null
+    },
+    {
+      "market": "APMC Yeola ",
+      "prices_9_15_apr_2025": 1085.71,
+      "prices_1_8_apr_2025": 1195.7,
+      "prices_9_15_mar_2025": 1352.82,
+      "prices_9_15_apr_2024": null,
+      "change_over_previous_week": "-9.2",
+      "change_over_previous_month": "-19.7",
+      "change_over_previous_year": null
+    },
+    {
+      "market": "Dindori(Vani) ",
+      "prices_9_15_apr_2025": 1284.38,
+      "prices_1_8_apr_2025": 1406.84,
+      "prices_9_15_mar_2025": 1551.17,
+      "prices_9_15_apr_2024": null,
+      "change_over_previous_week": "-8.7",
+      "change_over_previous_month": "-17.2",
+      "change_over_previous_year": null
+    },
+    {
+      "market": "Lasalgaon(Niphad) ",
+      "prices_9_15_apr_2025": 1041.48,
+      "prices_1_8_apr_2025": 1251.48,
+      "prices_9_15_mar_2025": 1595.28,
+      "prices_9_15_apr_2024": 1351.0,
+      "change_over_previous_week": "-16.8",
+      "change_over_previous_month": "-34.7",
+      "change_over_previous_year": "-22.9"
+    },
+    {
+      "market": "Lasalgaon(Vinchur) ",
+      "prices_9_15_apr_2025": 1149.74,
+      "prices_1_8_apr_2025": 1198.4,
+      "prices_9_15_mar_2025": 1590.94,
+      "prices_9_15_apr_2024": 1371.41,
+      "change_over_previous_week": "-4.1",
+      "change_over_previous_month": "-27.7",
+      "change_over_previous_year": "-16.2"
+    },
+    {
+      "market": "Malharshree Khajgi Krushi Utpann Bajar, Chandanpuri Tal Malegaon, Nashik",
+      "prices_9_15_apr_2025": null,
+      "prices_1_8_apr_2025": 1090.35,
+      "prices_9_15_mar_2025": null,
+      "prices_9_15_apr_2024": null,
+      "change_over_previous_week": null,
+      "change_over_previous_month": null,
+      "change_over_previous_year": null
+    },
+    {
+      "market": "Mankameshwr Fpc Sanchalit Mankameshwar Khajagi Krushi Utpanna Bajar Ltd, Nifad Nashik",
+      "prices_9_15_apr_2025": 1103.42,
+      "prices_1_8_apr_2025": 1245.65,
+      "prices_9_15_mar_2025": null,
+      "prices_9_15_apr_2024": null,
+      "change_over_previous_week": "-11.4",
+      "change_over_previous_month": null,
+      "change_over_previous_year": null
+    },
+    {
+      "market": "Pimpalgaon Baswant(Saykheda) ",
+      "prices_9_15_apr_2025": 1043.78,
+      "prices_1_8_apr_2025": 1257.55,
+      "prices_9_15_mar_2025": 1415.89,
+      "prices_9_15_apr_2024": null,
+      "change_over_previous_week": "-17.0",
+      "change_over_previous_month": "-26.3",
+      "change_over_previous_year": null
+    },
+    {
+      "market": "Shivsiddha Govind Producer Company Ltd Sanchalit Khajgi Krushi Utpann Bajar Samati-Abhona-Kalwan",
+      "prices_9_15_apr_2025": 1215.65,
+      "prices_1_8_apr_2025": 1336.88,
+      "prices_9_15_mar_2025": null,
+      "prices_9_15_apr_2024": 1400.0,
+      "change_over_previous_week": "-9.1",
+      "change_over_previous_month": null,
+      "change_over_previous_year": "-13.2"
+    },
+    {
+      "market": "Shri Rameshwar Krushi Market, M.Nagar, Tal Deola, Dist Nashik",
+      "prices_9_15_apr_2025": 896.14,
+      "prices_1_8_apr_2025": 1103.22,
+      "prices_9_15_mar_2025": null,
+      "prices_9_15_apr_2024": 1291.3,
+      "change_over_previous_week": "-18.8",
+      "change_over_previous_month": null,
+      "change_over_previous_year": "-30.6"
+    }
+  ],
+  "average": {
+    "market": "Average",
+    "prices_9_15_apr_2025": 1087.14,
+    "prices_1_8_apr_2025": 1203.23,
+    "prices_9_15_mar_2025": 1447.78,
+    "prices_9_15_apr_2024": 1347.75,
+    "change_over_previous_week": null,
+    "change_over_previous_month": null,
+    "change_over_previous_year": null
+  }
+}
