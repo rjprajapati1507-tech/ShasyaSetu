@@ -9,22 +9,30 @@ import { SAMPLE_ORIGIN, SAMPLE_MARKETS } from './marketData';
 // scrolling ticker strip, which is decorative and out of scope for the real
 // ShasyaSetu integration. Clearly not live data (see the ticker's own styling).
 export const TICKER_CROPS = [
+
   { name: 'Wheat', mandis: [
-      { name: 'Rajkot Mandi', price: 2340, trend: 1.8 },
-      { name: 'Gondal Mandi', price: 2290, trend: -0.5 },
-      { name: 'Ahmedabad Mandi', price: 2410, trend: 2.4 } ] },
+      { name: 'Nashik Mandi', price: 2340, trend: 1.8 },
+      { name: 'Pune Mandi', price: 2290, trend: -0.5 },
+      { name: 'Nagpur Mandi', price: 2410, trend: 2.4 }
+    ] },
+
   { name: 'Cotton', mandis: [
-      { name: 'Rajkot Mandi', price: 7150, trend: 0.9 },
-      { name: 'Junagadh Mandi', price: 7080, trend: -1.2 },
-      { name: 'Jamnagar Mandi', price: 7220, trend: 1.5 } ] },
+      { name: 'Akola Mandi', price: 7150, trend: 0.9 },
+      { name: 'Amravati Mandi', price: 7080, trend: -1.2 },
+      { name: 'Nagpur Mandi', price: 7220, trend: 1.5 }
+    ] },
+
   { name: 'Groundnut', mandis: [
-      { name: 'Rajkot Mandi', price: 6420, trend: 3.1 },
-      { name: 'Gondal Mandi', price: 6510, trend: 1.0 } ] },
+      { name: 'Jalgaon Mandi', price: 6420, trend: 3.1 },
+      { name: 'Dhule Mandi', price: 6510, trend: 1.0 }
+    ] },
+
   { name: 'Tomato', mandis: [
       { name: 'Mumbai APMC', price: 2858, trend: 5.2 },
-      { name: 'Pune APMC', price: 2564, trend: 4.4 } ] },
-];
+      { name: 'Pune APMC', price: 2564, trend: 4.4 }
+    ] },
 
+];
 export const BUYERS = [
   { id: 'b1', name: 'AgroFresh Processors Pvt Ltd', gst: '24AAAAP1234B1Z5', rating: 4.6, verified: true },
   { id: 'b2', name: 'National Grain Traders', gst: '24BBBGT5678C1Z2', rating: 4.2, verified: true },

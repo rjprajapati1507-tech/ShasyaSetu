@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { STATUS_CLASS, gradeNote } from '../data/mockData';
+import { useTranslation } from '../i18n/I18nContext';
 
 function EmptyState({ icon, title, sub }) {
   return (
@@ -12,6 +13,7 @@ function EmptyState({ icon, title, sub }) {
 }
 
 export default function Marketplace({ lots, onMakeOffer }) {
+  const { t } = useTranslation();
   const [activeFilter, setActiveFilter] = useState('All');
 
   const visibleLots = useMemo(
@@ -24,17 +26,17 @@ export default function Marketplace({ lots, onMakeOffer }) {
   return (
     <div>
       <div className="page-head">
-        <h1>Marketplace</h1>
-        <p>Browse verified lots from farmers and FPOs near you.</p>
+        <h1>{t('marketplaceTitle')}</h1>
+        <p>{t('marketplaceDesc')}</p>
       </div>
       <div className="filter-bar">
         {crops.map((c) => (
-          <button key={c} className={`chip ${activeFilter === c ? 'active' : ''}`} onClick={() => setActiveFilter(c)}>{c}</button>
+          <button key={c} className={`chip ${activeFilter === c ? 'active' : ''}`} onClick={() => setActiveFilter(c)}>{c === 'All' ? t('filterAll') : c}</button>
         ))}
       </div>
 
       {filtered.length === 0 ? (
-        <EmptyState icon="🛒" title="No lots match this filter" sub="Try a different crop filter." />
+        <EmptyState icon="🛒" title={t('noMatchTitle')} sub={t('noMatchDesc')} />
       ) : (
         filtered.map((lot) => (
           <div className="lot-card" key={lot.id}>
@@ -42,19 +44,19 @@ export default function Marketplace({ lots, onMakeOffer }) {
               <div>
                 <div className="lot-title">
                   {lot.crop} · {lot.id} <span className={`grade-pill grade-${lot.grade}`}>Grade {lot.grade}</span>
-                  {lot.isSample && <span className="grade-pill" style={{ background: 'var(--surface-sunk)', color: 'var(--ink-muted)' }}>Sample/demo lot</span>}
+                  {lot.isSample && <span className="grade-pill" style={{ background: 'var(--surface-sunk)', color: 'var(--ink-muted)' }}>{t('sampleDemoLot')}</span>}
                 </div>
                 <div className="lot-meta">{lot.fpo} · {lot.originLocation} → {lot.market} · {gradeNote(lot.grade)}</div>
               </div>
               <span className={`status-pill ${STATUS_CLASS[lot.status]}`}>{lot.status}</span>
             </div>
             <div className="lot-body">
-              <div><span>Available</span><b>{lot.qty} qtl</b></div>
-              <div><span>Asking price</span><b>₹{lot.price.toLocaleString('en-IN')}/qtl</b></div>
-              <div><span>Total value</span><b>₹{(lot.qty * lot.price).toLocaleString('en-IN')}</b></div>
+              <div><span>{t('available')}</span><b>{lot.qty} qtl</b></div>
+              <div><span>{t('askingPrice')}</span><b>₹{lot.price.toLocaleString('en-IN')}/qtl</b></div>
+              <div><span>{t('totalValue')}</span><b>₹{(lot.qty * lot.price).toLocaleString('en-IN')}</b></div>
             </div>
             <div className="lot-actions">
-              <button className="btn btn-primary btn-sm" onClick={() => onMakeOffer(lot.id)}>Make an offer</button>
+              <button className="btn btn-primary btn-sm" onClick={() => onMakeOffer(lot.id)}>{t('makeAnOffer')}</button>
             </div>
           </div>
         ))

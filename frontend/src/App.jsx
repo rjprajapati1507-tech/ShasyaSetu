@@ -15,8 +15,10 @@ import Marketplace from './views/Marketplace';
 import MyOffers from './views/MyOffers';
 import Help from './views/Help';
 import { INITIAL_LOTS, CURRENT_BUYER, nextOrderId } from './data/mockData';
+import { useTranslation } from './i18n/I18nContext';
 
 export default function App() {
+  const { t } = useTranslation();
   const [role, setRole] = useState('fpo');
   const [view, setView] = useState('fpo-prices');
   const [lots, setLots] = useState(INITIAL_LOTS);
@@ -80,7 +82,7 @@ export default function App() {
     setLots((current) => [...current, newLot]);
     setCreateLotOpen(false);
     setCreateLotPrefill(null);
-    showToast(`Lot created — sample grading: Grade ${draft.grade}, now live to buyers`, '🌾');
+    showToast(t('toastLotCreated', { grade: draft.grade }), '🌾');
     setView('fpo-lots');
   };
 
@@ -100,7 +102,7 @@ export default function App() {
         rated: false,
         createdAt: new Date(),
       };
-      showToast(`Offer accepted — ₹${(offer.price * offer.qty).toLocaleString('en-IN')} locked in simulated escrow`, '🔒');
+      showToast(t('toastOfferAccepted', { amount: `₹${(offer.price * offer.qty).toLocaleString('en-IN')}` }), '🔒');
       return {
         ...lot,
         status: 'Deal locked',
@@ -114,7 +116,7 @@ export default function App() {
     setLots((current) => current.map((lot) => (
       lot.id !== lotId ? lot : { ...lot, offers: lot.offers.map((o) => (o.id === offerId ? { ...o, status: 'Rejected' } : o)) }
     )));
-    showToast('Offer declined', '✖️');
+    showToast(t('toastOfferDeclined'), '✖️');
   };
 
   // ---- Marketplace / Make offer ----
@@ -126,7 +128,7 @@ export default function App() {
       return { ...lot, status: lot.status === 'Listed' ? 'Offer received' : lot.status, offers: [...lot.offers, newOffer] };
     }));
     setOfferModalLotId(null);
-    showToast(`Offer sent to ${offerTargetLot.fpo}`, '📨');
+    showToast(t('toastOfferSent', { fpo: offerTargetLot.fpo }), '📨');
     setView('buyer-offers');
   };
 
@@ -135,8 +137,8 @@ export default function App() {
     setLots((current) => current.map((lot) => {
       if (!lot.order || lot.order.id !== orderId) return lot;
       const nextStep = Math.min(lot.order.stepIndex + 1, 4);
-      if (nextStep === 4) showToast(`₹${(lot.order.price * lot.order.qty).toLocaleString('en-IN')} released from simulated escrow to FPO`, '💰');
-      else showToast(`Order updated`, '📦');
+      if (nextStep === 4) showToast(t('toastPaymentReleased', { amount: `₹${(lot.order.price * lot.order.qty).toLocaleString('en-IN')}` }), '💰');
+      else showToast(t('toastOrderUpdated'), '📦');
       return { ...lot, order: { ...lot.order, stepIndex: nextStep } };
     }));
   };
@@ -146,7 +148,7 @@ export default function App() {
       lot.order && lot.order.id === rateOrderId ? { ...lot, order: { ...lot.order, rated: true } } : lot
     )));
     setRateOrderId(null);
-    showToast(`Thanks — ${stars}★ rating recorded`, '⭐');
+    showToast(t('toastRatingRecorded', { stars }), '⭐');
   };
 
   const handleSubmitDispute = () => {
@@ -154,7 +156,7 @@ export default function App() {
       lot.order && lot.order.id === disputeOrderId ? { ...lot, order: { ...lot.order, disputed: true } } : lot
     )));
     setDisputeOrderId(null);
-    showToast(`Grievance #${Math.floor(1000 + Math.random() * 9000)} raised — payment frozen pending review`, '⚠️');
+    showToast(t('toastGrievanceRaised', { id: Math.floor(1000 + Math.random() * 9000) }), '⚠️');
   };
 
   return (

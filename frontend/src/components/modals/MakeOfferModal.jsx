@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from '../../i18n/I18nContext';
 
 export default function MakeOfferModal({ open, lot, onClose, onSubmit }) {
+  const { t } = useTranslation();
   const [price, setPrice] = useState('');
   const [qty, setQty] = useState('');
   const [priceErr, setPriceErr] = useState('');
@@ -16,9 +18,9 @@ export default function MakeOfferModal({ open, lot, onClose, onSubmit }) {
     const priceNum = parseFloat(price);
     const qtyNum = parseFloat(qty);
     let ok = true;
-    if (!priceNum || priceNum <= 0) { setPriceErr('Enter a valid price'); ok = false; } else setPriceErr('');
+    if (!priceNum || priceNum <= 0) { setPriceErr(t('errPrice')); ok = false; } else setPriceErr('');
     if (!qtyNum || qtyNum <= 0 || qtyNum > lot.qty) {
-      setQtyErr(qtyNum > lot.qty ? `Only ${lot.qty} quintals available` : 'Enter a valid quantity');
+      setQtyErr(qtyNum > lot.qty ? t('errOnlyAvailable', { qty: lot.qty }) : t('errValidQty'));
       ok = false;
     } else setQtyErr('');
     if (!ok) return;
@@ -28,21 +30,21 @@ export default function MakeOfferModal({ open, lot, onClose, onSubmit }) {
   return (
     <div className="overlay show">
       <div className="modal">
-        <h2>Make an offer</h2>
-        <p className="sub">Offer on {lot.crop} · {lot.id} — seller asking ₹{lot.price.toLocaleString('en-IN')}/qtl · {lot.qty} quintals available</p>
+        <h2>{t('makeOfferTitle')}</h2>
+        <p className="sub">{lot.crop} · {lot.id} — ₹{lot.price.toLocaleString('en-IN')}/qtl · {lot.qty} qtl</p>
         <div className="field">
-          <label>Your offer price (₹ / quintal)</label>
+          <label>{t('labelOfferPrice')}</label>
           <input type="number" value={price} onChange={(e) => setPrice(e.target.value)} placeholder="e.g. 2300" />
           {priceErr && <div className="field-error" style={{ display: 'block' }}>{priceErr}</div>}
         </div>
         <div className="field">
-          <label>Quantity you want (quintals)</label>
+          <label>{t('labelOfferQty')}</label>
           <input type="number" value={qty} onChange={(e) => setQty(e.target.value)} placeholder="e.g. 40" />
           {qtyErr && <div className="field-error" style={{ display: 'block' }}>{qtyErr}</div>}
         </div>
         <div className="modal-actions">
-          <button className="btn btn-secondary" onClick={onClose}>Cancel</button>
-          <button className="btn btn-primary" onClick={handleSubmit}>Send offer</button>
+          <button className="btn btn-secondary" onClick={onClose}>{t('cancel')}</button>
+          <button className="btn btn-primary" onClick={handleSubmit}>{t('sendOffer')}</button>
         </div>
       </div>
     </div>

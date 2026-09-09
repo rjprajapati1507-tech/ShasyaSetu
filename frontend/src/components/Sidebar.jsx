@@ -1,17 +1,21 @@
-const FPO_ITEMS = [
-  { view: 'fpo-prices', icon: '📈', label: 'Price intelligence' },
-  { view: 'fpo-lots', icon: '🌾', label: 'My lots', badgeKey: 'lots' },
-  { view: 'fpo-offers', icon: '🤝', label: 'Offers', badgeKey: 'offers' },
-  { view: 'fpo-orders', icon: '📦', label: 'Orders & payments' },
-];
-
-const BUYER_ITEMS = [
-  { view: 'buyer-market', icon: '🛒', label: 'Marketplace' },
-  { view: 'buyer-offers', icon: '📨', label: 'My offers' },
-  { view: 'buyer-orders', icon: '📦', label: 'Orders & payments' },
-];
+import { useTranslation } from '../i18n/I18nContext';
 
 export default function Sidebar({ role, view, onNavigate, lotCount, offerCount }) {
+  const { t } = useTranslation();
+
+  const FPO_ITEMS = [
+    { view: 'fpo-prices', icon: '📈', label: t('navPriceIntel') },
+    { view: 'fpo-lots', icon: '🌾', label: t('navMyLots'), badgeKey: 'lots' },
+    { view: 'fpo-offers', icon: '🤝', label: t('navOffers'), badgeKey: 'offers' },
+    { view: 'fpo-orders', icon: '📦', label: t('navOrders') },
+  ];
+
+  const BUYER_ITEMS = [
+    { view: 'buyer-market', icon: '🛒', label: t('navMarketplace') },
+    { view: 'buyer-offers', icon: '📨', label: t('navMyOffers') },
+    { view: 'buyer-orders', icon: '📦', label: t('navOrders') },
+  ];
+
   const items = role === 'fpo' ? FPO_ITEMS : BUYER_ITEMS;
   const badgeValue = { lots: lotCount, offers: offerCount };
   return (
@@ -28,9 +32,9 @@ export default function Sidebar({ role, view, onNavigate, lotCount, offerCount }
       ))}
       {role === 'fpo' && (
         <>
-          <div className="sidebar-label">Support</div>
+          <div className="sidebar-label">{t('sidebarSupport')}</div>
           <button className={`nav-item ${view === 'fpo-help' ? 'active' : ''}`} onClick={() => onNavigate('fpo-help')}>
-            <span>☎️&nbsp;&nbsp;Voice / WhatsApp line</span>
+            <span>☎️&nbsp;&nbsp;{t('navHelp')}</span>
           </button>
         </>
       )}

@@ -1,39 +1,35 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from '../../i18n/I18nContext';
 
-const REASONS = [
-  'Quality mismatch on delivery',
-  'Delayed pickup / transport',
-  'Quantity shortfall',
-  'Payment not released on time',
-  'Other',
-];
+const REASON_KEYS = ['disputeReason1', 'disputeReason2', 'disputeReason3', 'disputeReason4', 'disputeReason5'];
 
 export default function DisputeModal({ open, onClose, onSubmit }) {
-  const [reason, setReason] = useState(REASONS[0]);
+  const { t } = useTranslation();
+  const [reasonKey, setReasonKey] = useState(REASON_KEYS[0]);
   const [details, setDetails] = useState('');
 
-  useEffect(() => { if (open) { setReason(REASONS[0]); setDetails(''); } }, [open]);
+  useEffect(() => { if (open) { setReasonKey(REASON_KEYS[0]); setDetails(''); } }, [open]);
 
   if (!open) return null;
 
   return (
     <div className="overlay show">
       <div className="modal">
-        <h2>Raise a grievance</h2>
-        <p className="sub">Payment for this order will be frozen until it's resolved by a MandiSetu mediator.</p>
+        <h2>{t('disputeTitle')}</h2>
+        <p className="sub">{t('disputeSub')}</p>
         <div className="field">
-          <label>What went wrong?</label>
-          <select value={reason} onChange={(e) => setReason(e.target.value)}>
-            {REASONS.map((r) => <option key={r}>{r}</option>)}
+          <label>{t('disputeReasonLabel')}</label>
+          <select value={reasonKey} onChange={(e) => setReasonKey(e.target.value)}>
+            {REASON_KEYS.map((k) => <option key={k} value={k}>{t(k)}</option>)}
           </select>
         </div>
         <div className="field">
-          <label>Details</label>
-          <input value={details} onChange={(e) => setDetails(e.target.value)} placeholder="Briefly describe the issue" />
+          <label>{t('disputeDetailsLabel')}</label>
+          <input value={details} onChange={(e) => setDetails(e.target.value)} placeholder={t('disputeDetailsPlaceholder')} />
         </div>
         <div className="modal-actions">
-          <button className="btn btn-secondary" onClick={onClose}>Cancel</button>
-          <button className="btn btn-amber" onClick={() => onSubmit({ reason, details })}>Submit grievance</button>
+          <button className="btn btn-secondary" onClick={onClose}>{t('cancel')}</button>
+          <button className="btn btn-amber" onClick={() => onSubmit({ reason: t(reasonKey), details })}>{t('submitGrievance')}</button>
         </div>
       </div>
     </div>
