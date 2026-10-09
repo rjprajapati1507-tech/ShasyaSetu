@@ -2,6 +2,7 @@ import { createContext, useContext, useMemo, useState, useEffect } from 'react';
 import { translate, translateVisibleText } from './translations';
 
 const I18nContext = createContext(null);
+const originalTextNodes = new WeakMap();
 
 export function I18nProvider({ children }) {
   const [lang, setLangState] = useState(() => {
@@ -21,11 +22,10 @@ export function I18nProvider({ children }) {
 
   useEffect(() => {
     document.documentElement.lang = lang;
-    const originals = new WeakMap();
     const updateText = (node) => {
       if (node.nodeType === 3) {
-        const raw = originals.get(node) || node.nodeValue;
-        if (!originals.has(node)) originals.set(node, raw);
+        const raw = originalTextNodes.get(node) || node.nodeValue;
+        if (!originalTextNodes.has(node)) originalTextNodes.set(node, raw);
         const translated = translateVisibleText(lang, raw);
         if (node.nodeValue !== translated) node.nodeValue = translated;
         return;
