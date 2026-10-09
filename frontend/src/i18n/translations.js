@@ -371,7 +371,7 @@ export function translateVisibleText(lang, value) {
 
   // Match from any supported language, not just English. This lets the
   // interface switch back to English after a Hindi/Marathi render.
-  const entries = [...Object.values(dict), ...runtimeTranslations.flatMap((maps) => Object.keys(maps.en || maps.hi || {}).map((key) => ({ en: key, hi: maps.hi?.[key] || key, mr: maps.mr?.[key] || maps.hi?.[key] || key })))]
+  const entries = [...Object.values(dict), ...runtimeTranslations.flatMap((maps) => [...new Set(Object.values(maps).flatMap((languageMap) => Object.keys(languageMap || {})))].map((key) => ({ en: key, hi: maps.hi?.[key] || key, mr: maps.mr?.[key] || maps.hi?.[key] || key })))]
     .filter((entry) => LANGUAGES.some((item) => typeof entry[item.code] === 'string' && entry[item.code].length > 2))
     .sort((a, b) => {
       const longestA = Math.max(...LANGUAGES.map((item) => (a[item.code] || '').length));
