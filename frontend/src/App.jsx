@@ -48,43 +48,48 @@ function AuthScreen({ mode, setMode, onAuth }) {
     e.preventDefault();
     setError('');
     if (!email.trim() || !password.trim() || (mode === 'signup' && !name.trim())) {
-      setError('{tx('Please complete all required fields.',lang)}');
+      setError(tx('Please complete all required fields.', lang));
       return;
     }
     if (password.length < 6) {
-      setError('{tx('Use at least 6 characters for your password.',lang)}');
+      setError(tx('Use at least 6 characters for your password.', lang));
       return;
     }
     onAuth({ name: name.trim() || email.split('@')[0], email: email.trim(), role, org: org.trim() });
   };
   return <main className="auth-shell" lang={lang}>
     <section className="auth-story">
-      <div className="auth-story-inner"><div className="auth-brand-row"><Brand light lang={lang}/><LanguageSelect lang={lang} setLang={setLang}/></div>
-        <div className="story-copy"><span className="eyebrow light-eyebrow"><span className="pulse-dot" /> {tx('A FAIRER FARMING ECOSYSTEM',lang)}</span>
+      <div className="auth-story-inner">
+        <div className="auth-brand-row"><Brand light lang={lang}/><LanguageSelect lang={lang} setLang={setLang}/></div>
+        <div className="story-copy">
+          <span className="eyebrow light-eyebrow"><span className="pulse-dot" /> {tx('A FAIRER FARMING ECOSYSTEM',lang)}</span>
           <h1>{tx('Good harvests',lang)}<br/>{tx('deserve',lang)} <em>{tx('better markets.',lang)}</em></h1>
           <p>{tx('One connected space for farmers, buyers, and the people keeping the whole ecosystem moving.',lang)}</p>
           <div className="story-stats"><div><strong>24/7</strong><span>{tx('Market access',lang)}</span></div><div><strong>1 place</strong><span>{tx('To grow together',lang)}</span></div></div>
         </div>
-        <div className="auth-quote"><span>“</span><p>When the connection is direct, the value reaches the people who create it.</p></div>
-        <div className="story-bottom"><span>{tx('Built around India\'s agricultural community',lang)}</span><span>✳ Gujarat, India</span></div>
+        <div className="auth-quote"><span>“</span><p>{tx('When the connection is direct, the value reaches the people who create it.',lang)}</p></div>
+        <div className="story-bottom"><span>{tx("Built around India's agricultural community",lang)}</span><span>✳ Gujarat, India</span></div>
       </div>
     </section>
     <section className="auth-panel">
-      <div className="auth-panel-top"><span>{tx('Already part of the community?',lang)}</span><button className="text-button" onClick={() => setMode(mode === 'login' ? 'signup' : 'login')}>{tx(mode === 'login' ? 'Create an account' : 'Sign in',lang)}</button></div><div className="auth-mobile-language"><LanguageSelect lang={lang} setLang={setLang}/></div>
+      <div className="auth-panel-top"><span>{tx('Already part of the community?',lang)}</span><button className="text-button" onClick={() => setMode(mode === 'login' ? 'signup' : 'login')}>{tx(mode === 'login' ? 'Create an account' : 'Sign in',lang)}</button></div>
+      <div className="auth-mobile-language"><LanguageSelect lang={lang} setLang={setLang}/></div>
       <div className="auth-form-wrap">
         <div className="mobile-brand"><Brand lang={lang}/></div>
-        <div className="auth-heading"><span className="eyebrow">{tx('YOUR AGRICULTURE, CONNECTED',lang)}</span><h2>{mode === 'login' ? '{tx('Welcome back',lang)}' : '{tx('Create your account',lang)}'}</h2><p>{mode === 'login' ? '{tx('Sign in to pick up where your business left off.',lang)}' : '{tx('Join the network built to move agriculture forward.',lang)}'}</p></div>
+        <div className="auth-heading"><span className="eyebrow">{tx('YOUR AGRICULTURE, CONNECTED',lang)}</span><h2>{tx(mode === 'login' ? 'Welcome back' : 'Create your account',lang)}</h2><p>{tx(mode === 'login' ? 'Sign in to pick up where your business left off.' : 'Join the network built to move agriculture forward.',lang)}</p></div>
         <form onSubmit={submit} className="auth-form">
-          <div className="role-label">{mode === 'signup' ? '{tx('I am joining as',lang)}' : '{tx('Choose a workspace to preview',lang)}'}</div><div className="role-picker">
-            <button type="button" className={role === 'fpo' ? 'role-choice active' : 'role-choice'} onClick={() => setRole('fpo')}><span className="role-emoji">🌱</span><strong>FPO</strong><small>{mode === 'signup' ? '{tx('Sell produce',lang)}' : '{tx('FPO workspace',lang)}'}</small></button>
-            <button type="button" className={role === 'buyer' ? 'role-choice active' : 'role-choice'} onClick={() => setRole('buyer')}><span className="role-emoji">🧺</span><strong>Buyer</strong><small>{mode === 'signup' ? '{tx('Source produce',lang)}' : '{tx('Buyer workspace',lang)}'}</small></button>
+          <div className="role-label">{tx(mode === 'signup' ? 'I am joining as' : 'Choose a workspace to preview',lang)}</div>
+          <div className="role-picker">
+            <button type="button" className={role === 'fpo' ? 'role-choice active' : 'role-choice'} onClick={() => setRole('fpo')}><span className="role-emoji">🌱</span><strong>FPO</strong><small>{tx(mode === 'signup' ? 'Sell produce' : 'FPO workspace',lang)}</small></button>
+            <button type="button" className={role === 'buyer' ? 'role-choice active' : 'role-choice'} onClick={() => setRole('buyer')}><span className="role-emoji">🧺</span><strong>Buyer</strong><small>{tx(mode === 'signup' ? 'Source produce' : 'Buyer workspace',lang)}</small></button>
             {mode === 'login' && <button type="button" className={role === 'admin' ? 'role-choice active' : 'role-choice'} onClick={() => setRole('admin')}><span className="role-emoji">🛡️</span><strong>Admin</strong><small>{tx('Admin console',lang)}</small></button>}
-            </div>{mode === 'signup' && <><Field label="{tx('Full name',lang)}" placeholder="{tx('Your name',lang)}" autoComplete="name" value={name} onChange={e => setName(e.target.value)} required/><Field label={role === 'fpo' ? '{tx('FPO / organisation name',lang)}' : '{tx('Business name (optional)',lang)}'} placeholder={role === 'fpo' ? 'e.g. Saurashtra Farmers FPO' : 'Your business'} value={org} onChange={e => setOrg(e.target.value)} required={role === 'fpo'}/></>}
-          <Field label="{tx('Email address',lang)}" type="email" placeholder="you@company.com" autoComplete="email" value={email} onChange={e => setEmail(e.target.value)} required/>
-          <label className="field"><span>{tx('Password',lang)}</span><div className="password-wrap"><input type={showPassword ? 'text' : 'password'} placeholder="{tx('At least 6 characters',lang)}" autoComplete={mode === 'login' ? 'current-password' : 'new-password'} value={password} onChange={e => setPassword(e.target.value)} required minLength={6}/><button type="button" className="show-password" onClick={() => setShowPassword(!showPassword)}>{showPassword ? '{tx('Hide',lang)}' : '{tx('Show',lang)}'}</button></div></label>
+          </div>
+          {mode === 'signup' && <><Field label={tx('Full name',lang)} placeholder={tx('Your name',lang)} autoComplete="name" value={name} onChange={e => setName(e.target.value)} required/><Field label={tx(role === 'fpo' ? 'FPO / organisation name' : 'Business name (optional)',lang)} placeholder={role === 'fpo' ? 'e.g. Saurashtra Farmers FPO' : tx('Your business',lang)} value={org} onChange={e => setOrg(e.target.value)} required={role === 'fpo'}/></>}
+          <Field label={tx('Email address',lang)} type="email" placeholder="you@company.com" autoComplete="email" value={email} onChange={e => setEmail(e.target.value)} required/>
+          <label className="field"><span>{tx('Password',lang)}</span><div className="password-wrap"><input type={showPassword ? 'text' : 'password'} placeholder={tx('At least 6 characters',lang)} autoComplete={mode === 'login' ? 'current-password' : 'new-password'} value={password} onChange={e => setPassword(e.target.value)} required minLength={6}/><button type="button" className="show-password" onClick={() => setShowPassword(!showPassword)}>{tx(showPassword ? 'Hide' : 'Show',lang)}</button></div></label>
           {mode === 'login' && <div className="form-options"><label className="check-label"><input type="checkbox"/> {tx('Keep me signed in',lang)}</label><button type="button" className="text-button" onClick={() => setError('For this frontend preview, use any email and a password of at least 6 characters.')}>{tx('Forgot password?',lang)}</button></div>}
           {error && <div className="form-error" role="alert">{error}</div>}
-          <button className="primary-button auth-submit" type="submit">{mode === 'login' ? '{tx('Sign in to ShasyaSetu',lang)}' : '{tx('Create account',lang)}'} <span>↗</span></button>
+          <button className="primary-button auth-submit" type="submit">{tx(mode === 'login' ? 'Sign in to ShasyaSetu' : 'Create account',lang)} <span>↗</span></button>
         </form>
         {mode === 'login' && <div className="demo-note"><span>✳</span><div><strong>{tx('Exploring ShasyaSetu?',lang)}</strong><p>{tx('Sign in with any email and a password of 6+ characters to preview a role workspace.',lang)}</p></div></div>}
         <p className="terms">{tx('By continuing, you agree to our',lang)} <a href="#terms" onClick={e => e.preventDefault()}>{tx('Terms of Use',lang)}</a> and <a href="#privacy" onClick={e => e.preventDefault()}>{tx('Privacy Policy',lang)}</a>.</p>
