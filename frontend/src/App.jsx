@@ -1,191 +1,191 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
-import WorkspaceLayout from './layouts/WorkspaceLayout';
-import Toast from './components/Toast';
-import CreateLotModal from './components/modals/CreateLotModal';
-import MakeOfferModal from './components/modals/MakeOfferModal';
-import RateModal from './components/modals/RateModal';
-import DisputeModal from './components/modals/DisputeModal';
-import PriceIntelligence from './views/PriceIntelligence';
-import MyLots from './views/MyLots';
-import Offers from './views/Offers';
-import OrdersPayments from './views/OrdersPayments';
-import Marketplace from './views/Marketplace';
-import MyOffers from './views/MyOffers';
-import Help from './views/Help';
-import { INITIAL_LOTS, CURRENT_BUYER, nextOrderId } from './data/mockData';
-import { useTranslation } from './i18n/I18nContext';
+import { useMemo, useState } from 'react';
 
-export default function App() {
-  const { t } = useTranslation();
-  const [role, setRole] = useState('fpo');
-  const [view, setView] = useState('fpo-prices');
-  const [lots, setLots] = useState(INITIAL_LOTS);
-  const [toast, setToast] = useState(null);
-  const toastTimer = useRef(null);
+const initialLots = [
+  { id: 'LOT-1042', crop: 'Premium Wheat', variety: 'Lokwan', qty: '120 quintals', price: 2680, location: 'Rajkot, Gujarat', grade: 'A', status: 'Available', seller: 'Saurashtra Farmers Collective', initials: 'SF', color: 'gold' },
+  { id: 'LOT-1038', crop: 'Groundnut', variety: 'Bold 45/50', qty: '80 quintals', price: 6250, location: 'Junagadh, Gujarat', grade: 'A+', status: 'Available', seller: 'Gir Organic FPO', initials: 'GO', color: 'green' },
+  { id: 'LOT-1031', crop: 'Cotton', variety: 'Shankar-6', qty: '200 quintals', price: 7120, location: 'Amreli, Gujarat', grade: 'A', status: 'Offer received', seller: 'Kisan Pragati FPO', initials: 'KP', color: 'blue' },
+  { id: 'LOT-1027', crop: 'Chickpea', variety: 'Desi Kabuli', qty: '65 quintals', price: 5450, location: 'Ahmedabad, Gujarat', grade: 'A', status: 'Available', seller: 'Anand Agro Collective', initials: 'AA', color: 'purple' },
+];
+const money = (n) => '₹' + Number(n).toLocaleString('en-IN');
+const roleNames = { fpo: 'FPO workspace', buyer: 'Buyer workspace', admin: 'Admin console' };
 
-  const [createLotOpen, setCreateLotOpen] = useState(false);
-  const [createLotPrefill, setCreateLotPrefill] = useState(null);
-  const [offerModalLotId, setOfferModalLotId] = useState(null);
-  const [rateOrderId, setRateOrderId] = useState(null);
-  const [disputeOrderId, setDisputeOrderId] = useState(null);
-
-  useEffect(() => () => clearTimeout(toastTimer.current), []);
-
-  const showToast = (message, icon) => {
-    setToast({ message, icon });
-    clearTimeout(toastTimer.current);
-    toastTimer.current = setTimeout(() => setToast(null), 2800);
-  };
-
-  const handleRoleChange = (nextRole) => {
-    setRole(nextRole);
-    setView(nextRole === 'fpo' ? 'fpo-prices' : 'buyer-market');
-  };
-
-  const lotCount = lots.filter((l) => l.status === 'Listed' || l.status === 'Offer received').length;
-  const offerCount = lots.reduce((sum, l) => sum + l.offers.filter((o) => o.status === 'Pending').length, 0);
-  const orders = useMemo(() => lots.filter((l) => l.order).map((l) => l.order), [lots]);
-
-  // ---- Price Intelligence -> Create Lot handoff ----
-  const handleContinueToCreateLot = (selectedMarket) => {
-    setCreateLotPrefill({
-      crop: selectedMarket.crop,
-      market: selectedMarket.market,
-      quantityKg: selectedMarket.quantityKg,
-      expectedPricePerKg: selectedMarket.expectedPricePerKg,
-      transportCostPerKg: selectedMarket.transportCostPerKg,
-      expectedNetPerKg: selectedMarket.expectedNetPerKg,
-    });
-    setCreateLotOpen(true);
-  };
-
-  const handleCreateLot = (draft) => {
-    const newLot = {
-      id: `L${100 + lots.length + 1}`,
-      crop: draft.crop,
-      qty: draft.qty,
-      unit: 'quintal',
-      price: draft.price,
-      grade: draft.grade,
-      status: 'Listed',
-      fpo: 'Saurashtra Farmers FPO',
-      originLocation: draft.originLocation,
-      market: draft.market,
-      isSample: false,
-      priceIntel: draft.priceIntel,
-      offers: [],
-      order: null,
-      created: new Date(),
-    };
-    setLots((current) => [...current, newLot]);
-    setCreateLotOpen(false);
-    setCreateLotPrefill(null);
-    showToast(t('toastLotCreated', { grade: draft.grade }), '🌾');
-    setView('fpo-lots');
-  };
-
-  // ---- Offers ----
-  const handleAcceptOffer = (lotId, offerId) => {
-    setLots((current) => current.map((lot) => {
-      if (lot.id !== lotId) return lot;
-      const offer = lot.offers.find((o) => o.id === offerId);
-      const order = {
-        id: nextOrderId(),
-        lot,
-        buyer: offer.buyer,
-        price: offer.price,
-        qty: offer.qty,
-        stepIndex: 0,
-        disputed: false,
-        rated: false,
-        createdAt: new Date(),
-      };
-      showToast(t('toastOfferAccepted', { amount: `₹${(offer.price * offer.qty).toLocaleString('en-IN')}` }), '🔒');
-      return {
-        ...lot,
-        status: 'Deal locked',
-        order,
-        offers: lot.offers.map((o) => (o.id === offerId ? { ...o, status: 'Accepted' } : o)),
-      };
-    }));
-  };
-
-  const handleRejectOffer = (lotId, offerId) => {
-    setLots((current) => current.map((lot) => (
-      lot.id !== lotId ? lot : { ...lot, offers: lot.offers.map((o) => (o.id === offerId ? { ...o, status: 'Rejected' } : o)) }
-    )));
-    showToast(t('toastOfferDeclined'), '✖️');
-  };
-
-  // ---- Marketplace / Make offer ----
-  const offerTargetLot = lots.find((l) => l.id === offerModalLotId) || null;
-  const handleSubmitOffer = ({ price, qty }) => {
-    setLots((current) => current.map((lot) => {
-      if (lot.id !== offerModalLotId) return lot;
-      const newOffer = { id: `OF${Math.floor(Math.random() * 100000)}`, buyer: CURRENT_BUYER, price, qty, status: 'Pending' };
-      return { ...lot, status: lot.status === 'Listed' ? 'Offer received' : lot.status, offers: [...lot.offers, newOffer] };
-    }));
-    setOfferModalLotId(null);
-    showToast(t('toastOfferSent', { fpo: offerTargetLot.fpo }), '📨');
-    setView('buyer-offers');
-  };
-
-  // ---- Orders: advance / rate / dispute ----
-  const handleAdvanceOrder = (orderId) => {
-    setLots((current) => current.map((lot) => {
-      if (!lot.order || lot.order.id !== orderId) return lot;
-      const nextStep = Math.min(lot.order.stepIndex + 1, 4);
-      if (nextStep === 4) showToast(t('toastPaymentReleased', { amount: `₹${(lot.order.price * lot.order.qty).toLocaleString('en-IN')}` }), '💰');
-      else showToast(t('toastOrderUpdated'), '📦');
-      return { ...lot, order: { ...lot.order, stepIndex: nextStep } };
-    }));
-  };
-
-  const handleSubmitRating = (stars) => {
-    setLots((current) => current.map((lot) => (
-      lot.order && lot.order.id === rateOrderId ? { ...lot, order: { ...lot.order, rated: true } } : lot
-    )));
-    setRateOrderId(null);
-    showToast(t('toastRatingRecorded', { stars }), '⭐');
-  };
-
-  const handleSubmitDispute = () => {
-    setLots((current) => current.map((lot) => (
-      lot.order && lot.order.id === disputeOrderId ? { ...lot, order: { ...lot.order, disputed: true } } : lot
-    )));
-    setDisputeOrderId(null);
-    showToast(t('toastGrievanceRaised', { id: Math.floor(1000 + Math.random() * 9000) }), '⚠️');
-  };
-
-  return (
-    <>
-      <WorkspaceLayout role={role} view={view} onRoleChange={handleRoleChange} onNavigate={setView} lotCount={lotCount} offerCount={offerCount}>
-        {role === 'fpo' && view === 'fpo-prices' && <PriceIntelligence onContinueToCreateLot={handleContinueToCreateLot} />}
-        {role === 'fpo' && view === 'fpo-lots' && <MyLots lots={lots} onCreateNew={() => { setCreateLotPrefill(null); setCreateLotOpen(true); }} />}
-        {role === 'fpo' && view === 'fpo-offers' && <Offers lots={lots} onAccept={handleAcceptOffer} onReject={handleRejectOffer} />}
-        {role === 'fpo' && view === 'fpo-orders' && <OrdersPayments orders={orders} isFpoView onAdvance={handleAdvanceOrder} onRate={setRateOrderId} onDispute={setDisputeOrderId} />}
-        {role === 'fpo' && view === 'fpo-help' && <Help />}
-        {role === 'buyer' && view === 'buyer-market' && <Marketplace lots={lots} onMakeOffer={setOfferModalLotId} />}
-        {role === 'buyer' && view === 'buyer-offers' && <MyOffers lots={lots} currentBuyerId={CURRENT_BUYER.id} />}
-        {role === 'buyer' && view === 'buyer-orders' && <OrdersPayments orders={orders} isFpoView={false} onAdvance={handleAdvanceOrder} onRate={setRateOrderId} onDispute={setDisputeOrderId} />}
-      </WorkspaceLayout>
-
-      <CreateLotModal
-        open={createLotOpen}
-        prefill={createLotPrefill}
-        onClose={() => { setCreateLotOpen(false); setCreateLotPrefill(null); }}
-        onCreate={handleCreateLot}
-      />
-      <MakeOfferModal
-        open={!!offerModalLotId}
-        lot={offerTargetLot}
-        onClose={() => setOfferModalLotId(null)}
-        onSubmit={handleSubmitOffer}
-      />
-      <RateModal open={!!rateOrderId} onClose={() => setRateOrderId(null)} onSubmit={handleSubmitRating} />
-      <DisputeModal open={!!disputeOrderId} onClose={() => setDisputeOrderId(null)} onSubmit={handleSubmitDispute} />
-
-      <Toast toast={toast} />
-    </>
-  );
+function Brand({ light = false }) {
+  return <div className={'brand ' + (light ? 'brand-light' : '')}><div className="brand-mark">S<span>✳</span></div><div><strong>ShasyaSetu</strong><small>Farm to future</small></div></div>;
 }
+function Icon({ name }) {
+  const icons = { home:'⌂', market:'◈', lots:'▦', offers:'⇄', orders:'▤', prices:'↗', users:'♙', shield:'⬡', settings:'⚙', help:'?', logout:'↗', leaf:'❋', search:'⌕', bell:'♧', arrow:'↗', plus:'+', filter:'☷', menu:'☰' };
+  return <span className="nav-icon" aria-hidden="true">{icons[name] || '•'}</span>;
+}
+function Field({ label, ...props }) {
+  return <label className="field"><span>{label}</span><input {...props} /></label>;
+}
+function AuthScreen({ mode, setMode, onAuth }) {
+  const [role, setRole] = useState('fpo');
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [org, setOrg] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState('');
+  const submit = (e) => {
+    e.preventDefault();
+    setError('');
+    if (!email.trim() || !password.trim() || (mode === 'signup' && !name.trim())) {
+      setError('Please complete all required fields.');
+      return;
+    }
+    if (password.length < 6) {
+      setError('Use at least 6 characters for your password.');
+      return;
+    }
+    onAuth({ name: name.trim() || email.split('@')[0], email: email.trim(), role, org: org.trim() });
+  };
+  return <main className="auth-shell">
+    <section className="auth-story">
+      <div className="auth-story-inner"><Brand light />
+        <div className="story-copy"><span className="eyebrow light-eyebrow"><span className="pulse-dot" /> A FAIRER FARMING ECOSYSTEM</span>
+          <h1>Good harvests<br/>deserve <em>better markets.</em></h1>
+          <p>One connected space for farmers, buyers, and the people keeping the whole ecosystem moving.</p>
+          <div className="story-stats"><div><strong>24/7</strong><span>Market access</span></div><div><strong>1 place</strong><span>To grow together</span></div></div>
+        </div>
+        <div className="auth-quote"><span>“</span><p>When the connection is direct, the value reaches the people who create it.</p></div>
+        <div className="story-bottom"><span>Built around India's agricultural community</span><span>✳ Gujarat, India</span></div>
+      </div>
+    </section>
+    <section className="auth-panel">
+      <div className="auth-panel-top"><span>Already part of the community?</span><button className="text-button" onClick={() => setMode(mode === 'login' ? 'signup' : 'login')}>{mode === 'login' ? 'Create an account' : 'Sign in'}</button></div>
+      <div className="auth-form-wrap">
+        <div className="mobile-brand"><Brand /></div>
+        <div className="auth-heading"><span className="eyebrow">YOUR AGRICULTURE, CONNECTED</span><h2>{mode === 'login' ? 'Welcome back' : 'Create your account'}</h2><p>{mode === 'login' ? 'Sign in to pick up where your business left off.' : 'Join the network built to move agriculture forward.'}</p></div>
+        <form onSubmit={submit} className="auth-form">
+          <div className="role-label">{mode === 'signup' ? 'I am joining as' : 'Choose a workspace to preview'}</div><div className="role-picker">
+            <button type="button" className={role === 'fpo' ? 'role-choice active' : 'role-choice'} onClick={() => setRole('fpo')}><span className="role-emoji">🌱</span><strong>FPO</strong><small>{mode === 'signup' ? 'Sell produce' : 'FPO workspace'}</small></button>
+            <button type="button" className={role === 'buyer' ? 'role-choice active' : 'role-choice'} onClick={() => setRole('buyer')}><span className="role-emoji">🧺</span><strong>Buyer</strong><small>{mode === 'signup' ? 'Source produce' : 'Buyer workspace'}</small></button>
+            {mode === 'login' && <button type="button" className={role === 'admin' ? 'role-choice active' : 'role-choice'} onClick={() => setRole('admin')}><span className="role-emoji">🛡️</span><strong>Admin</strong><small>Admin console</small></button>}
+            </div>{mode === 'signup' && <><Field label="Full name" placeholder="Your name" autoComplete="name" value={name} onChange={e => setName(e.target.value)} required/><Field label={role === 'fpo' ? 'FPO / organisation name' : 'Business name (optional)'} placeholder={role === 'fpo' ? 'e.g. Saurashtra Farmers FPO' : 'Your business'} value={org} onChange={e => setOrg(e.target.value)} required={role === 'fpo'}/></>}
+          <Field label="Email address" type="email" placeholder="you@company.com" autoComplete="email" value={email} onChange={e => setEmail(e.target.value)} required/>
+          <label className="field"><span>Password</span><div className="password-wrap"><input type={showPassword ? 'text' : 'password'} placeholder="At least 6 characters" autoComplete={mode === 'login' ? 'current-password' : 'new-password'} value={password} onChange={e => setPassword(e.target.value)} required minLength={6}/><button type="button" className="show-password" onClick={() => setShowPassword(!showPassword)}>{showPassword ? 'Hide' : 'Show'}</button></div></label>
+          {mode === 'login' && <div className="form-options"><label className="check-label"><input type="checkbox"/> Keep me signed in</label><button type="button" className="text-button" onClick={() => setError('For this frontend preview, use any email and a password of at least 6 characters.')}>Forgot password?</button></div>}
+          {error && <div className="form-error" role="alert">{error}</div>}
+          <button className="primary-button auth-submit" type="submit">{mode === 'login' ? 'Sign in to ShasyaSetu' : 'Create account'} <span>↗</span></button>
+        </form>
+        {mode === 'login' && <div className="demo-note"><span>✳</span><div><strong>Exploring ShasyaSetu?</strong><p>Sign in with any email and a password of 6+ characters to preview a role workspace.</p></div></div>}
+        <p className="terms">By continuing, you agree to our <a href="#terms" onClick={e => e.preventDefault()}>Terms of Use</a> and <a href="#privacy" onClick={e => e.preventDefault()}>Privacy Policy</a>.</p>
+      </div>
+      <div className="auth-footer"><span>© 2026 ShasyaSetu</span><span>Made for the people who grow our food <span className="footer-heart">♥</span></span></div>
+    </section>
+  </main>;
+}
+
+function Sidebar({ role, page, navigate, user, onLogout, mobileOpen, closeMobile }) {
+  const groups = {
+    fpo: [{ title:'WORKSPACE', items:[['overview','Overview','home'],['prices','Price intelligence','prices'],['my-lots','My listings','lots'],['offers','Offers received','offers'],['orders','Orders & payments','orders']] }, { title:'SUPPORT', items:[['help','Help centre','help']] }],
+    buyer: [{ title:'BUYER DESK', items:[['overview','Overview','home'],['marketplace','Explore marketplace','market'],['my-offers','My offers','offers'],['orders','Orders & purchases','orders']] }, { title:'SUPPORT', items:[['help','Help centre','help']] }],
+    admin: [{ title:'ADMINISTRATION', items:[['overview','Overview','home'],['users','User management','users'],['listings','Listing review','lots'],['activity','Platform activity','orders'],['settings','Settings','settings']] }],
+  };
+  return <><div className={mobileOpen ? 'sidebar-backdrop open' : 'sidebar-backdrop'} onClick={closeMobile}></div><aside className={'app-sidebar ' + (mobileOpen ? 'sidebar-open' : '')}>
+    <div className="sidebar-brand"><Brand/><button className="sidebar-close" onClick={closeMobile}>×</button></div>
+    <div className="workspace-switch"><div className={'workspace-avatar ' + role}>{role === 'fpo' ? 'F' : role === 'buyer' ? 'B' : 'A'}</div><div><strong>{roleNames[role]}</strong><small>{user.org || user.name}</small></div><span className="switch-caret">⌄</span></div>
+    <nav className="side-nav">{groups[role].map(group => <div className="nav-group" key={group.title}><div className="nav-label">{group.title}</div>{group.items.map(item => <button key={item[0]} className={'nav-item ' + (page === item[0] ? 'selected' : '')} onClick={() => { navigate(item[0]); closeMobile(); }}><Icon name={item[2]}/><span>{item[1]}</span>{item[0] === 'offers' && role === 'fpo' && <i className="nav-count">3</i>}</button>)}</div>)}</nav>
+    <div className="sidebar-bottom"><div className="help-card"><div className="help-card-icon">✳</div><strong>Need a hand?</strong><p>We're here to help your business grow.</p><button onClick={() => { navigate('help'); closeMobile(); }}>Visit help centre <span>↗</span></button></div><div className="sidebar-user"><div className="user-avatar">{(user.name || 'U').slice(0,1).toUpperCase()}</div><div className="user-details"><strong>{user.name}</strong><small>{role === 'fpo' ? 'FPO account' : role === 'buyer' ? 'Buyer account' : 'Administrator'}</small></div><button className="logout-icon" aria-label="Sign out" onClick={onLogout}><Icon name="logout"/></button></div></div>
+  </aside></>;
+}
+function Topbar({ page, role, user, onMenu, onLogout }) {
+  const labels = { overview:'Overview', prices:'Price intelligence', 'my-lots':'My listings', offers:'Offers received', orders:role === 'buyer' ? 'Orders & purchases' : 'Orders & payments', marketplace:'Explore marketplace','my-offers':'My offers', users:'User management', listings:'Listing review', activity:'Platform activity', settings:'Settings', help:'Help centre' };
+  return <header className="app-topbar"><button className="mobile-menu" onClick={onMenu}><Icon name="menu"/></button><div className="breadcrumbs"><span>ShasyaSetu</span><b>/</b><strong>{labels[page] || 'Overview'}</strong></div><div className="topbar-actions"><div className="market-status"><span className="pulse-dot green-dot"></span> Markets active</div><button className="icon-button notification-button" aria-label="Notifications">♧<i></i></button><div className="topbar-divider"></div><button className="topbar-profile" onClick={onLogout}><div className="user-avatar">{(user.name || 'U').slice(0,1).toUpperCase()}</div><span>{user.name}</span><b>⌄</b></button></div></header>;
+}
+function StatCard({ icon, label, value, delta, tone = 'green' }) {
+  return <article className="stat-card"><div className="stat-card-top"><span>{label}</span><span className={'stat-icon ' + tone}>{icon}</span></div><div className="stat-value">{value}</div><div className="stat-foot"><span className="delta-pill">↗ {delta}</span><span>vs. last month</span></div></article>;
+}
+function PageHeading({ eyebrow, title, subtitle, action, onAction }) {
+  return <div className="page-heading"><div><div className="eyebrow">{eyebrow}</div><h1>{title}</h1><p>{subtitle}</p></div>{action && <button className="primary-button heading-action" onClick={onAction}><Icon name="plus"/>{action}</button>}</div>;
+}
+function Overview({ role, user, lots, navigate }) {
+  const isFpo = role === 'fpo', isBuyer = role === 'buyer';
+  const visibleLots = lots.filter(l => l.status !== 'Removed').slice(0, 4);
+  return <><PageHeading eyebrow={isFpo ? 'YOUR FARMING BUSINESS' : isBuyer ? 'YOUR SOURCING DESK' : 'PLATFORM CONTROL'} title={isFpo ? 'Your harvest, your growth.' : isBuyer ? 'Find your next great harvest.' : 'The big picture.'} subtitle={isFpo ? 'Here’s what’s happening across your listings and market today.' : isBuyer ? 'A clear view of your sourcing, offers, and active orders.' : 'Monitor marketplace health and keep the community moving.'} action={isFpo ? 'Create a listing' : isBuyer ? 'Explore produce' : 'Review listings'} onAction={() => navigate(isFpo ? 'my-lots' : isBuyer ? 'marketplace' : 'listings')}/>
+    <div className="welcome-banner"><div className="welcome-art"><span>✳</span><i></i><b></b></div><div><span className="welcome-kicker">SATURDAY, 10 OCTOBER 2026</span><h2>Good to see you, {user.name.split(' ')[0]} <span>✦</span></h2><p>{isFpo ? 'A new day, a fresh market. Let’s make this harvest count.' : isBuyer ? 'Quality produce is closer than you think. Let’s find it.' : 'Your community is growing. Here’s your daily pulse.'}</p></div><div className="banner-side-note"><span>✳</span><div><strong>{isFpo ? 'Better prices start here' : isBuyer ? 'Source with confidence' : 'Community first'}</strong><small>{isFpo ? 'Know your market before you list.' : isBuyer ? 'Discover verified farmer collectives.' : 'A healthier market for everyone.'}</small></div></div></div>
+    <div className="stats-grid">{isFpo ? <><StatCard icon="▦" label="Active listings" value="12" delta="+2.4%" tone="green"/><StatCard icon="⇄" label="Offers received" value="08" delta="+12.8%" tone="amber"/><StatCard icon="₹" label="Sales this month" value="₹2.4L" delta="+8.2%" tone="blue"/><StatCard icon="◷" label="Pending orders" value="03" delta="2 need action" tone="purple"/></> : isBuyer ? <><StatCard icon="◈" label="Available lots" value={String(lots.filter(l=>l.status==='Available').length).padStart(2,'0')} delta="+6.4%" tone="green"/><StatCard icon="⇄" label="Open offers" value="04" delta="2 awaiting reply" tone="amber"/><StatCard icon="₹" label="Purchase value" value="₹1.8L" delta="+11.2%" tone="blue"/><StatCard icon="◷" label="Active orders" value="02" delta="On track" tone="purple"/></> : <><StatCard icon="♙" label="Registered users" value="1,284" delta="+9.4%" tone="green"/><StatCard icon="▦" label="Active listings" value={String(lots.length).padStart(2,'0')} delta="+6.4%" tone="amber"/><StatCard icon="⇄" label="Open offers" value="86" delta="+12.8%" tone="blue"/><StatCard icon="◷" label="Needs review" value="07" delta="3 urgent" tone="purple"/></>}</div>
+    <div className="content-grid"><section className="surface-card listings-card"><div className="section-heading"><div><h3>{isFpo ? 'Your active listings' : isBuyer ? 'Fresh from the marketplace' : 'Latest marketplace listings'}</h3><p>{isFpo ? 'Keep an eye on the produce you have listed.' : 'Quality produce, ready to find its next home.'}</p></div><button className="subtle-button" onClick={() => navigate(isFpo ? 'my-lots' : isBuyer ? 'marketplace' : 'listings')}>View all <span>↗</span></button></div><LotTable lots={visibleLots} role={role} compact onAction={id => navigate(role === 'fpo' ? 'my-lots' : role === 'buyer' ? 'marketplace' : 'listings')}/></section>
+    <section className="surface-card activity-card"><div className="section-heading"><div><h3>Recent activity</h3><p>A little movement goes a long way.</p></div><span className="activity-live"><i></i> LIVE</span></div><div className="activity-list">{(isFpo ? [['offer','New offer received','Groundnut · ₹6,180/quintal','12 min ago'],['check','Listing approved','Premium Wheat · LOT-1042','1 hr ago'],['truck','Order update','Cotton shipment is on the way','3 hrs ago'],['price','Market price changed','Wheat prices up by 2.4%','Yesterday']] : isBuyer ? [['check','Offer accepted','Groundnut · Gir Organic FPO','20 min ago'],['offer','Offer sent','Premium Wheat · LOT-1042','2 hrs ago'],['truck','Order dispatched','Chickpea · ORD-2081','Yesterday'],['price','New lots available','6 fresh listings added','Yesterday']] : [['check','New FPO registered','Anand Agro Collective','8 min ago'],['offer','Listing flagged','Cotton · LOT-1038','25 min ago'],['users','Buyer verified','Western Foods Pvt. Ltd.','1 hr ago'],['truck','Order completed','ORD-2078 · ₹84,000','3 hrs ago']]).map((a,i)=><div className="activity-item" key={i}><div className={'activity-icon act-' + a[0]}>{a[0]==='offer'?'⇄':a[0]==='check'?'✓':a[0]==='truck'?'↗':a[0]==='price'?'₹':'♙'}</div><div className="activity-copy"><strong>{a[1]}</strong><span>{a[2]}</span><small>{a[3]}</small></div></div>)}</div><button className="activity-footer" onClick={() => navigate(role === 'admin' ? 'activity' : 'orders')}>See all activity <span>→</span></button></section></div>
+  </>;
+}
+function LotTable({ lots, role, compact = false, onAction }) {
+  return <div className="table-scroll"><table className="lots-table"><thead><tr><th>PRODUCE</th><th>QUANTITY</th><th>PRICE / QTL</th><th>STATUS</th><th></th></tr></thead><tbody>{lots.map(lot=><tr key={lot.id}><td><div className="produce-cell"><div className={'crop-thumb ' + lot.color}>{lot.crop.slice(0,1)}</div><div><strong>{lot.crop}</strong><small>{lot.seller} · {lot.id}</small></div></div></td><td>{lot.qty}</td><td><strong className="price-cell">{money(lot.price)}</strong><small className="price-unit">per quintal</small></td><td><span className={'status-pill ' + (lot.status === 'Available' ? 'status-available' : lot.status === 'Removed' ? 'status-rejected' : 'status-pending')}><i></i>{lot.status}</span></td><td><button className="row-action" onClick={() => onAction && onAction(lot.id)} aria-label={'View ' + lot.crop}>↗</button></td></tr>)}</tbody></table>{lots.length === 0 && <div className="empty-state"><span>🌾</span><h3>Nothing here just yet</h3><p>When there’s something to show, it’ll appear here.</p></div>}</div>;
+}
+function ListingsPage({ role, lots, setLots, showToast }) {
+  const [query,setQuery] = useState('');
+  const [filter,setFilter] = useState('All');
+  const [createOpen,setCreateOpen] = useState(false);
+  const [draft,setDraft] = useState({crop:'',qty:'',price:'',location:'Ahmedabad, Gujarat'});
+  const filtered = lots.filter(l => (role !== 'fpo' || l.seller === 'Your FPO' || l.id.startsWith('MY-') || !l.isMine) && (filter==='All' || l.status===filter) && (l.crop+' '+l.seller+' '+l.location).toLowerCase().includes(query.toLowerCase()));
+  const addLot = e => { e.preventDefault(); if(!draft.crop.trim() || Number(draft.qty)<=0 || Number(draft.price)<=0) return; setLots(prev=>[{id:'MY-'+String(Date.now()).slice(-4),crop:draft.crop.trim(),variety:'Standard grade',qty:draft.qty+' quintals',price:Number(draft.price),location:draft.location,grade:'A',status:'Available',seller:'Your FPO',initials:'YF',color:'green',isMine:true},...prev]); setCreateOpen(false); setDraft({crop:'',qty:'',price:'',location:'Ahmedabad, Gujarat'}); showToast('Your listing has been added.','✓'); };
+  return <><PageHeading eyebrow={role==='admin'?'MARKETPLACE OVERSIGHT':'YOUR PRODUCE, YOUR TERMS'} title={role==='admin'?'Listing review':'Your listings'} subtitle={role==='admin'?'Review the produce moving through the marketplace.':'Manage your produce listings and keep buyers in the loop.'} action={role==='fpo'?'Add new listing':null} onAction={()=>setCreateOpen(true)}/><div className="surface-card list-management"><div className="list-toolbar"><label className="search-field"><Icon name="search"/><input placeholder="Search produce, seller, location..." value={query} onChange={e=>setQuery(e.target.value)}/></label><div className="filter-tabs">{['All','Available','Offer received','Removed'].map(f=><button key={f} className={filter===f?'filter-active':''} onClick={()=>setFilter(f)}>{f}</button>)}</div></div><LotTable lots={filtered} role={role} onAction={id=>showToast('Selected listing '+id,'↗')}/></div>{createOpen && <div className="modal-backdrop" onClick={()=>setCreateOpen(false)}><form className="modal-card" onSubmit={addLot} onClick={e=>e.stopPropagation()}><button type="button" className="modal-close" onClick={()=>setCreateOpen(false)}>×</button><span className="eyebrow">NEW PRODUCE LISTING</span><h2>Bring your harvest to market.</h2><p>Add the basics. You can refine the details later.</p><Field label="Crop / produce name" placeholder="e.g. Premium Wheat" value={draft.crop} onChange={e=>setDraft({...draft,crop:e.target.value})} required/><div className="modal-two-col"><Field label="Quantity (quintals)" type="number" min="1" placeholder="100" value={draft.qty} onChange={e=>setDraft({...draft,qty:e.target.value})} required/><Field label="Price per quintal (₹)" type="number" min="1" placeholder="2500" value={draft.price} onChange={e=>setDraft({...draft,price:e.target.value})} required/></div><Field label="Location" value={draft.location} onChange={e=>setDraft({...draft,location:e.target.value})} required/><button className="primary-button auth-submit" type="submit">Publish listing <span>↗</span></button></form></div>}</>;
+}
+function Marketplace({ lots, onOffer }) {
+  const [query,setQuery]=useState('');
+  const [crop,setCrop]=useState('All crops');
+  const crops=['All crops',...new Set(lots.map(l=>l.crop))];
+  const shown=lots.filter(l=>l.status==='Available' && (crop==='All crops'||l.crop===crop) && (l.crop+' '+l.seller+' '+l.location).toLowerCase().includes(query.toLowerCase()));
+  return <><PageHeading eyebrow="THE PRODUCE EXCHANGE" title="Find the good stuff." subtitle="Discover quality produce directly from farmer collectives. No noise, just better connections."/><div className="market-hero"><div><span className="market-hero-label">HARVEST SPOTLIGHT</span><h2>Good soil. Great produce.<br/><em>Better connections.</em></h2><p>Fresh listings from farmer collectives across Gujarat.</p><div className="market-hero-badges"><span>✳ Verified collectives</span><span>✓ Transparent pricing</span></div></div><div className="market-illustration"><div className="sun"></div><div className="field field-one"></div><div className="field field-two"></div><div className="field field-three"></div><div className="plant">♣</div></div></div><div className="market-filter-row"><label className="search-field"><Icon name="search"/><input placeholder="Search crop, FPO or location..." value={query} onChange={e=>setQuery(e.target.value)}/></label><select value={crop} onChange={e=>setCrop(e.target.value)} aria-label="Filter by crop">{crops.map(c=><option key={c}>{c}</option>)}</select><span className="results-count">{shown.length} lots available</span></div><div className="market-cards">{shown.map(lot=><article className="market-lot-card" key={lot.id}><div className={'market-lot-image ' + lot.color}><span className="lot-grade">Grade {lot.grade}</span><div className="crop-illustration">{lot.crop==='Groundnut'?'🥜':lot.crop==='Cotton'?'☁️':lot.crop==='Chickpea'?'🫘':'🌾'}</div><span className="lot-id">{lot.id}</span></div><div className="market-lot-body"><div className="seller-line"><div className="mini-org">{lot.initials}</div><span>{lot.seller}</span><span className="verified-mark">✓</span></div><h3>{lot.crop}</h3><p className="lot-variety">{lot.variety} · {lot.location}</p><div className="market-lot-details"><div><small>Available quantity</small><strong>{lot.qty}</strong></div><div><small>Asking price</small><strong>{money(lot.price)}<small className="inline-unit"> / qtl</small></strong></div></div><button className="outline-button full-button" onClick={()=>onOffer(lot)}>Make an offer <span>↗</span></button></div></article>)}</div>{shown.length===0&&<div className="empty-state surface-card"><span>🌾</span><h3>No matching produce</h3><p>Try another crop or search term.</p></div>}</>;
+}
+function OffersPage({ role, showToast }) {
+  const rows = role==='buyer' ? [['Premium Wheat','Saurashtra Farmers Collective','₹2,620 / qtl','Awaiting reply'],['Groundnut','Gir Organic FPO','₹6,100 / qtl','Accepted'],['Chickpea','Anand Agro Collective','₹5,200 / qtl','Awaiting reply']] : [['Groundnut','Western Foods Pvt. Ltd.','₹6,180 / qtl','Awaiting reply'],['Premium Wheat','Shree Traders','₹2,640 / qtl','Awaiting reply'],['Cotton','Aarav Textiles','₹7,000 / qtl','Accepted']];
+  return <><PageHeading eyebrow="LET’S MAKE A DEAL" title={role==='buyer'?'Your offers':'Offers on your produce'} subtitle={role==='buyer'?'Keep track of the conversations behind your next purchase.':'Review buyer offers and choose what works for your farmers.'}/><div className="offer-summary-grid"><div className="surface-card"><span>All offers</span><strong>08</strong><small>Across active listings</small></div><div className="surface-card"><span>Awaiting response</span><strong>03</strong><small>Ready for your attention</small></div><div className="surface-card"><span>Accepted this month</span><strong>12</strong><small>Deals moving forward</small></div></div><div className="surface-card list-management"><div className="section-heading offer-heading"><div><h3>Recent offers</h3><p>Every offer is a chance to build a better partnership.</p></div><span className="status-pill status-pending">3 need attention</span></div><div className="offer-list">{rows.map((r,i)=><div className="offer-row" key={i}><div className="crop-thumb green">{r[0].slice(0,1)}</div><div className="offer-main"><strong>{r[0]}</strong><small>{r[1]}</small></div><div className="offer-price"><strong>{r[2]}</strong><small>Proposed price</small></div><span className={'status-pill '+(r[3]==='Accepted'?'status-available':'status-pending')}>{r[3]}</span><div className="offer-actions">{role==='fpo'&&r[3]!=='Accepted'?<><button className="small-accept" onClick={()=>showToast('Offer accepted.','✓')}>Accept</button><button className="small-decline" onClick={()=>showToast('Offer declined.','×')}>Decline</button></>:<button className="row-action" onClick={()=>showToast('Offer details opened.','↗')}>↗</button>}</div></div>)}</div></div></>;
+}
+function OrdersPage({ role, showToast }) {
+  const orders=[['ORD-2081','Premium Wheat','Saurashtra Farmers Collective','₹84,000','In transit',2],['ORD-2076','Groundnut','Gir Organic FPO','₹62,500','Processing',1],['ORD-2069','Chickpea','Anand Agro Collective','₹41,600','Completed',4]];
+  return <><PageHeading eyebrow="FROM AGREEMENT TO DELIVERY" title={role==='buyer'?'Orders & purchases':'Orders & payments'} subtitle="Follow every order from the first handshake to final delivery."/><div className="order-banner"><div className="order-banner-icon">↗</div><div><strong>Your trade, in good hands.</strong><p>Stay up to date with the milestones that matter.</p></div><div className="order-banner-side"><span>03</span><small>Active orders</small></div></div><div className="surface-card list-management"><div className="section-heading"><div><h3>Order history</h3><p>All your current and completed trades in one place.</p></div><button className="subtle-button" onClick={()=>showToast('Showing all orders.','✓')}>All orders⌄</button></div><div className="table-scroll"><table className="lots-table"><thead><tr><th>ORDER</th><th>PRODUCE</th><th>ORDER VALUE</th><th>STATUS</th><th>PROGRESS</th></tr></thead><tbody>{orders.map(o=><tr key={o[0]}><td><strong>{o[0]}</strong><small className="price-unit">{o[2]}</small></td><td><div className="produce-cell"><div className="crop-thumb green">{o[1].slice(0,1)}</div><strong>{o[1]}</strong></div></td><td><strong className="price-cell">{o[3]}</strong></td><td><span className={'status-pill '+(o[4]==='Completed'?'status-available':'status-pending')}>{o[4]}</span></td><td><button className="subtle-button" onClick={()=>showToast('Order '+o[0]+' selected.','↗')}>Track order ↗</button></td></tr>)}</tbody></table></div></div></>;
+}
+function PricesPage({ navigate }) {
+  const prices=[['Wheat','Rajkot APMC','₹2,680','+2.4%','Lokwan'],['Groundnut','Junagadh APMC','₹6,250','+1.8%','Bold 45/50'],['Cotton','Amreli APMC','₹7,120','−0.6%','Shankar-6'],['Chickpea','Ahmedabad APMC','₹5,450','+1.2%','Desi Kabuli']];
+  return <><PageHeading eyebrow="KNOW BEFORE YOU GROW" title="The market, made clearer." subtitle="Use market signals to make more confident decisions for your produce." action="Create a listing" onAction={()=>navigate('my-lots')}/><div className="price-hero"><div><span className="market-hero-label">GUJARAT MARKET SNAPSHOT</span><h2>Every rupee counts.</h2><p>Indicative sample prices for your daily planning.</p></div><div className="price-hero-number"><span>Market pulse</span><strong>↗ 2.1%</strong><small>Average movement · sample data</small></div></div><div className="price-grid">{prices.map((p,i)=><article className="surface-card price-market-card" key={p[0]}><div className="price-market-top"><div className={'crop-thumb '+['gold','green','blue','purple'][i]}>{p[0].slice(0,1)}</div><span className={'price-change '+(p[3][0]==='−'?'negative':'')}>{p[3]}</span></div><h3>{p[0]}</h3><p>{p[4]} · {p[1]}</p><strong className="big-market-price">{p[2]}<small> / quintal</small></strong><div className="price-chart"><span style={{height:'36%'}}></span><span style={{height:'48%'}}></span><span style={{height:'42%'}}></span><span style={{height:'63%'}}></span><span style={{height:'56%'}}></span><span style={{height:'75%'}}></span><span style={{height:'68%'}}></span><span style={{height:'91%'}}></span></div><small className="sample-label">Illustrative 7-day trend</small></article>)}</div><p className="data-disclaimer">Prices shown are illustrative sample values for the frontend preview, not live market quotations.</p></>;
+}
+function AdminUsers({ showToast }) {
+  const users=[['SC','Saurashtra Farmers Collective','FPO','Rajkot','Verified'],['WF','Western Foods Pvt. Ltd.','Buyer','Ahmedabad','Verified'],['GO','Gir Organic FPO','FPO','Junagadh','Pending'],['AT','Aarav Textiles','Buyer','Surat','Verified'],['AA','Anand Agro Collective','FPO','Anand','Pending']];
+  return <><PageHeading eyebrow="PEOPLE MAKE THE PLATFORM" title="Community management" subtitle="Keep user accounts organised and the marketplace trustworthy."/><div className="stats-grid"><StatCard icon="♙" label="Total accounts" value="1,284" delta="+9.4%" tone="green"/><StatCard icon="✓" label="Verified" value="1,177" delta="+5.2%" tone="blue"/><StatCard icon="◷" label="Awaiting review" value="07" delta="3 urgent" tone="amber"/><StatCard icon="⊘" label="Suspended" value="04" delta="No change" tone="purple"/></div><div className="surface-card list-management"><div className="list-toolbar"><label className="search-field"><Icon name="search"/><input placeholder="Search users..." /></label><button className="outline-button" onClick={()=>showToast('User list prepared for review.','✓')}>Export list ↓</button></div><div className="table-scroll"><table className="lots-table"><thead><tr><th>USER / ORGANISATION</th><th>ROLE</th><th>LOCATION</th><th>VERIFICATION</th><th>ACTION</th></tr></thead><tbody>{users.map(u=><tr key={u[0]}><td><div className="produce-cell"><div className="mini-org">{u[0]}</div><strong>{u[1]}</strong></div></td><td>{u[2]}</td><td>{u[3]}</td><td><span className={'status-pill '+(u[4]==='Verified'?'status-available':'status-pending')}>{u[4]}</span></td><td><button className="subtle-button" onClick={()=>showToast(u[1]+' selected for review.','↗')}>{u[4]==='Pending'?'Review':'View'} ↗</button></td></tr>)}</tbody></table></div></div></>;
+}
+function HelpPage() {
+  return <><PageHeading eyebrow="WE'RE IN THIS TOGETHER" title="How can we help?" subtitle="Quick answers and a little guidance, whenever you need it."/><div className="help-grid">{[['🌱','FPO guide','Learn how to list produce, review offers, and manage orders.'],['🧺','Buyer guide','Find produce, make offers, and track your purchases.'],['🔐','Account & security','Manage your account details and sign-in preferences.']].map(a=><article className="surface-card help-topic" key={a[1]}><span>{a[0]}</span><h3>{a[1]}</h3><p>{a[2]}</p><button className="subtle-button">Read guide ↗</button></article>)}</div><div className="surface-card support-strip"><div><h3>Still need a human?</h3><p>Our support team can help you find your feet.</p></div><a href="mailto:support@shasyasetu.example">Contact support ↗</a></div></>;
+}
+function App() {
+  const [session,setSession] = useState(() => { try { return JSON.parse(localStorage.getItem('shasyasetu-preview-session') || 'null'); } catch { return null; } });
+  const [authMode,setAuthMode] = useState('login');
+  const [page,setPage] = useState('overview');
+  const [lots,setLots] = useState(initialLots);
+  const [toast,setToast] = useState(null);
+  const [mobileOpen,setMobileOpen] = useState(false);
+  const role = session?.role || 'fpo';
+  const [offerTarget,setOfferTarget] = useState(null);
+  const [offerPrice,setOfferPrice] = useState('');
+  const [offerQty,setOfferQty] = useState('');
+  const showToast = (message,icon='✓') => { setToast({message,icon}); window.setTimeout(()=>setToast(null),2800); };
+  const signIn = (user) => {
+    const next = { ...user, role: user.role || 'fpo' };
+    setSession(next);
+    try { localStorage.setItem('shasyasetu-preview-session',JSON.stringify(next)); } catch {}
+    setPage('overview');
+  };
+  const logout = () => { setSession(null); try { localStorage.removeItem('shasyasetu-preview-session'); } catch {} setAuthMode('login'); setPage('overview'); };
+  const navigate = p => { setPage(p); setMobileOpen(false); };
+  const pageContent = useMemo(() => {
+    if (page==='overview') return <Overview role={role} user={session} lots={lots} navigate={navigate}/>;
+    if (page==='marketplace' && role==='buyer') return <Marketplace lots={lots} onOffer={lot=>{setOfferTarget(lot);setOfferPrice(String(lot.price));setOfferQty('10');}}/>;
+    if (page==='my-lots' && role==='fpo') return <ListingsPage role={role} lots={lots} setLots={setLots} showToast={showToast}/>;
+    if (page==='listings' && role==='admin') return <ListingsPage role={role} lots={lots} setLots={setLots} showToast={showToast}/>;
+    if (page==='prices' && role==='fpo') return <PricesPage navigate={navigate}/>;
+    if ((page==='offers' && role==='fpo') || (page==='my-offers' && role==='buyer')) return <OffersPage role={role} showToast={showToast}/>;
+    if (page==='orders') return <OrdersPage role={role} showToast={showToast}/>;
+    if (page==='users' && role==='admin') return <AdminUsers showToast={showToast}/>;
+    if (page==='activity' && role==='admin') return <><PageHeading eyebrow="PLATFORM PULSE" title="Platform activity" subtitle="A running view of the events shaping the ShasyaSetu community."/><div className="surface-card activity-page"><div className="activity-list">{[['check','New FPO registered','Anand Agro Collective','8 min ago'],['offer','Listing flagged','Cotton · LOT-1038','25 min ago'],['users','Buyer verified','Western Foods Pvt. Ltd.','1 hr ago'],['truck','Order completed','ORD-2078 · ₹84,000','3 hrs ago'],['price','Market prices refreshed','Gujarat market sample data','Yesterday']].map((a,i)=><div className="activity-item" key={i}><div className="activity-icon act-check">{a[0]==='offer'?'⇄':a[0]==='check'?'✓':a[0]==='truck'?'↗':a[0]==='price'?'₹':'♙'}</div><div className="activity-copy"><strong>{a[1]}</strong><span>{a[2]}</span><small>{a[3]}</small></div></div>)}</div></div></>;
+    if (page==='settings' && role==='admin') return <><PageHeading eyebrow="PREFERENCES" title="Admin settings" subtitle="A few useful controls for this frontend preview."/><div className="surface-card settings-card"><h3>Platform preferences</h3><label className="setting-row"><div><strong>Marketplace announcements</strong><small>Show community notices on the workspace overview.</small></div><input type="checkbox" defaultChecked/></label><label className="setting-row"><div><strong>New listing review</strong><small>Keep new listings visible in the admin review queue.</small></div><input type="checkbox" defaultChecked/></label><label className="setting-row"><div><strong>Weekly activity summary</strong><small>Display a weekly platform summary in this console.</small></div><input type="checkbox"/></label></div></>;
+    if (page==='help') return <HelpPage/>;
+    return <Overview role={role} user={session} lots={lots} navigate={navigate}/>;
+  },[page,role,session,lots]);
+  if (!session) return <AuthScreen mode={authMode} setMode={setAuthMode} onAuth={signIn}/>;
+  return <div className="workspace-app"><Sidebar role={role} page={page} navigate={navigate} user={session} onLogout={logout} mobileOpen={mobileOpen} closeMobile={()=>setMobileOpen(false)}/><main className="workspace-main"><Topbar page={page} role={role} user={session} onMenu={()=>setMobileOpen(true)} onLogout={logout}/><div className="workspace-content">{pageContent}<footer className="workspace-footer"><span>© 2026 ShasyaSetu · Growing better, together.</span><span><i></i> Frontend preview</span></footer></div></main>
+    {offerTarget && <div className="modal-backdrop" onClick={()=>setOfferTarget(null)}><form className="modal-card" onSubmit={e=>{e.preventDefault();showToast('Offer submitted for '+offerTarget.crop+'.');setOfferTarget(null);navigate('my-offers');}} onClick={e=>e.stopPropagation()}><button type="button" className="modal-close" onClick={()=>setOfferTarget(null)}>×</button><span className="eyebrow">LET'S START A CONVERSATION</span><h2>Make an offer</h2><p>{offerTarget.crop} · {offerTarget.seller}</p><Field label="Your offer per quintal (₹)" type="number" min="1" value={offerPrice} onChange={e=>setOfferPrice(e.target.value)} required/><Field label="Quantity (quintals)" type="number" min="1" value={offerQty} onChange={e=>setOfferQty(e.target.value)} required/><button className="primary-button auth-submit" type="submit">Send offer <span>↗</span></button></form></div>}
+    {toast && <div className="toast-message" role="status"><span>{toast.icon}</span>{toast.message}</div>}
+  </div>;
+}
+export default App;
