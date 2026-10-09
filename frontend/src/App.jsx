@@ -13,6 +13,45 @@ const uiText = {
 };
 registerTranslations(uiText);
 function tx(text, lang) { return uiText[lang]?.[text] || translate(lang, text); }
+
+const produceTranslations = {
+  'Premium Wheat': { hi: 'प्रीमियम गेहूँ', mr: 'प्रीमियम गहू' },
+  'Wheat': { hi: 'गेहूँ', mr: 'गहू' },
+  'Groundnut': { hi: 'मूँगफली', mr: 'शेंगदाणे' },
+  'Cotton': { hi: 'कपास', mr: 'कापूस' },
+  'Chickpea': { hi: 'चना', mr: 'हरभरा' },
+  'Rice': { hi: 'चावल', mr: 'तांदूळ' },
+  'Maize': { hi: 'मक्का', mr: 'मका' },
+  'Millet': { hi: 'बाजरा', mr: 'बाजरी' },
+  'Mustard': { hi: 'सरसों', mr: 'मोहरी' },
+  'Potato': { hi: 'आलू', mr: 'बटाटा' },
+  'Onion': { hi: 'प्याज़', mr: 'कांदा' },
+  'Tomato': { hi: 'टमाटर', mr: 'टोमॅटो' },
+  'Soybean': { hi: 'सोयाबीन', mr: 'सोयाबीन' },
+  'Pigeon Pea': { hi: 'अरहर', mr: 'तूर' },
+  'Green Gram': { hi: 'मूँग', mr: 'मूग' },
+  'Black Gram': { hi: 'उड़द', mr: 'उडीद' },
+  'Sorghum': { hi: 'ज्वार', mr: 'ज्वारी' },
+  'Barley': { hi: 'जौ', mr: 'जव' },
+  'Saurashtra Farmers Collective': { hi: 'सौराष्ट्र किसान समूह', mr: 'सौराष्ट्र शेतकरी समूह' },
+  'Gir Organic FPO': { hi: 'गिर ऑर्गेनिक FPO', mr: 'गिर ऑर्गेनिक FPO' },
+  'Kisan Pragati FPO': { hi: 'किसान प्रगति FPO', mr: 'किसान प्रगती FPO' },
+  'Anand Agro Collective': { hi: 'आनंद कृषि समूह', mr: 'आनंद कृषी समूह' },
+};
+function produceText(value, lang) {
+  if (!value || lang === 'en') return value;
+  if (produceTranslations[value]?.[lang]) return produceTranslations[value][lang];
+  // Translate known crop names even when they appear inside activity/deal descriptions.
+  let result = value;
+  for (const [source, translations] of Object.entries(produceTranslations).sort((a,b) => b[0].length-a[0].length)) {
+    if (translations[lang]) result = result.split(source).join(translations[lang]);
+  }
+  return result;
+}
+function quantityText(value, lang) {
+  if (!value || lang === 'en') return value;
+  return value.replace(/quintals?/gi, lang === 'hi' ? 'क्विंटल' : 'क्विंटल');
+}
 function LanguageSelect({ lang, setLang, compact = false }) {
   return <label className={'language-select ' + (compact ? 'language-compact' : '')}><span aria-hidden="true">文</span><select aria-label="Language" value={lang} onChange={e => setLang(e.target.value)}><option value="en">English</option><option value="hi">हिन्दी</option><option value="mr">मराठी</option></select></label>;
 }
