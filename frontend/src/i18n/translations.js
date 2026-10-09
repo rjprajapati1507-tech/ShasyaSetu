@@ -359,14 +359,30 @@ export function translate(lang, key, vars) {
 }
 
 export function translateVisibleText(lang, value) {
-  if (!value || lang === 'en') return value;
-  let output = value;
-  const entries = Object.values(dict).filter((entry) => entry.en && entry[lang] && entry.en.length > 2).sort((a, b) => b.en.length - a.en.length);
+  if (value == null || value === '') return value;
+  const target = LANGUAGES.some((item) => item.code === lang) ? lang : 'en';
+  let output = String(value);
+
+  // Match from any supported language, not just English. This lets the
+  // interface switch back to English after a Hindi/Marathi render.
+  const entries = Object.values(dict)
+    .filter((entry) => LANGUAGES.some((item) => typeof entry[item.code] === 'string' && entry[item.code].length > 2))
+    .sort((a, b) => {
+      const longestA = Math.max(...LANGUAGES.map((item) => (a[item.code] || '').length));
+      const longestB = Math.max(...LANGUAGES.map((item) => (b[item.code] || '').length));
+      return longestB - longestA;
+    });
+
   for (const entry of entries) {
-    if (output === entry.en) return entry[lang];
-    if (output.includes(entry.en)) output = output.split(entry.en).join(entry[lang]);
+    const targetText = entry[target] || entry.en;
+    if (!targetText) continue;
+    for (const language of LANGUAGES) {
+      const sourceText = entry[language.code];
+      if (!sourceText || sourceText === targetText) continue;
+      if (output === sourceText) return targetText;
+      if (output.includes(sourceText)) output = output.split(sourceText).join(targetText);
+    }
   }
   return output;
 }
-
 export { dict as translations };
