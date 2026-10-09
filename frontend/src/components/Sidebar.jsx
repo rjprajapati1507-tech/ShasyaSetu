@@ -19,7 +19,7 @@ export default function Sidebar({ role, view, onNavigate, lotCount, offerCount }
   const items = role === 'fpo' ? FPO_ITEMS : BUYER_ITEMS;
   const badgeValue = { lots: lotCount, offers: offerCount };
   return (
-    <nav className="sidebar" aria-label={t("primaryNavigation")}>
+    <nav className="sidebar" aria-label="Primary navigation">
       {items.map((item) => (
         <button
           key={item.view}
