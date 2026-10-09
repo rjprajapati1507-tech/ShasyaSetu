@@ -8,6 +8,12 @@ export const LANGUAGES = [
   { code: 'mr', label: 'मराठी' },
 ];
 
+const runtimeTranslations = [];
+
+export function registerTranslations(maps) {
+  if (maps && !runtimeTranslations.includes(maps)) runtimeTranslations.push(maps);
+}
+
 const dict = {
   // ---------- Common / brand ----------
   appName: { en: 'ShasyaSetu', hi: 'शस्यसेतु', mr: 'शस्यसेतू' },
@@ -365,7 +371,7 @@ export function translateVisibleText(lang, value) {
 
   // Match from any supported language, not just English. This lets the
   // interface switch back to English after a Hindi/Marathi render.
-  const entries = Object.values(dict)
+  const entries = [...Object.values(dict), ...runtimeTranslations.flatMap((maps) => Object.keys(maps.en || maps.hi || {}).map((key) => ({ en: key, hi: maps.hi?.[key] || key, mr: maps.mr?.[key] || maps.hi?.[key] || key })))]
     .filter((entry) => LANGUAGES.some((item) => typeof entry[item.code] === 'string' && entry[item.code].length > 2))
     .sort((a, b) => {
       const longestA = Math.max(...LANGUAGES.map((item) => (a[item.code] || '').length));
