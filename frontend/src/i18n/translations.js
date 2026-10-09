@@ -226,18 +226,94 @@ const dict = {
   toastPaymentReleased: { en: '{amount} released from simulated escrow to FPO', hi: 'नकली एस्क्रो से {amount} FPO को जारी किया गया', mr: 'नकली एस्क्रोमधून {amount} FPO ला जारी केली' },
   toastRatingRecorded: { en: 'Thanks — {stars}★ rating recorded', hi: 'धन्यवाद — {stars}★ रेटिंग दर्ज हुई', mr: 'धन्यवाद — {stars}★ रेटिंग नोंदवली' },
   toastGrievanceRaised: { en: 'Grievance #{id} raised — payment frozen pending review', hi: 'शिकायत #{id} दर्ज हुई — समीक्षा तक भुगतान रोका गया', mr: 'तक्रार #{id} नोंदवली — आढावा होईपर्यंत पेमेंट थांबवले' },
+
+  profileTitle: { en: 'My profile', hi: 'मेरी प्रोफ़ाइल', mr: 'माझे प्रोफाइल' },
+  profileEyebrow: { en: 'YOUR ACCOUNT', hi: 'आपका खाता', mr: 'तुमचे खाते' },
+  profileSubtitle: { en: 'View and update your own account information.', hi: 'अपने खाते की जानकारी देखें और अपडेट करें।', mr: 'तुमच्या खात्याची माहिती पहा आणि अद्ययावत करा.' },
+  personalInformation: { en: 'Personal information', hi: 'व्यक्तिगत जानकारी', mr: 'वैयक्तिक माहिती' },
+  profileOnlyInfo: { en: 'These details belong to your current profile only.', hi: 'यह जानकारी केवल आपकी वर्तमान प्रोफ़ाइल से संबंधित है।', mr: 'ही माहिती फक्त तुमच्या सध्याच्या प्रोफाइलशी संबंधित आहे.' },
+  fullName: { en: 'Full name', hi: 'पूरा नाम', mr: 'पूर्ण नाव' },
+  emailAddress: { en: 'Email address', hi: 'ईमेल पता', mr: 'ईमेल पत्ता' },
+  organisation: { en: 'Business / organisation', hi: 'व्यवसाय / संस्था', mr: 'व्यवसाय / संस्था' },
+  phoneOptional: { en: 'Phone number (optional)', hi: 'फ़ोन नंबर (वैकल्पिक)', mr: 'फोन नंबर (ऐच्छिक)' },
+  location: { en: 'Location', hi: 'स्थान', mr: 'ठिकाण' },
+  saveProfile: { en: 'Save profile', hi: 'प्रोफ़ाइल सहेजें', mr: 'प्रोफाइल जतन करा' },
+  accountType: { en: 'Account type', hi: 'खाते का प्रकार', mr: 'खात्याचा प्रकार' },
+  demoAccount: { en: 'Demo account', hi: 'डेमो खाता', mr: 'डेमो खाते' },
+  notProvided: { en: 'Not provided', hi: 'नहीं दिया गया', mr: 'दिलेली नाही' },
+  localPreview: { en: 'Yes · local preview', hi: 'हाँ · स्थानीय प्रीव्यू', mr: 'होय · स्थानिक प्रीव्ह्यू' },
+  fpoSeller: { en: 'FPO seller', hi: 'FPO विक्रेता', mr: 'FPO विक्रेता' },
+  buyerRole: { en: 'Buyer', hi: 'खरीदार', mr: 'खरेदीदार' },
+  administrator: { en: 'Administrator', hi: 'प्रशासक', mr: 'प्रशासक' },
+  quickTestAccounts: { en: 'Quick test accounts', hi: 'त्वरित टेस्ट खाते', mr: 'त्वरित चाचणी खाती' },
+  readyMadeAccounts: { en: 'Open a ready-made account to test the deal flow between roles.', hi: 'अलग-अलग भूमिकाओं के बीच डील का प्रवाह जाँचने के लिए तैयार खाता खोलें।', mr: 'वेगवेगळ्या भूमिकांमधील व्यवहाराचा प्रवाह तपासण्यासाठी तयार खाते उघडा.' },
+  openFpoWorkspace: { en: 'Open FPO workspace', hi: 'FPO कार्यक्षेत्र खोलें', mr: 'FPO कार्यक्षेत्र उघडा' },
+  browseMakeOffers: { en: 'Browse and make offers', hi: 'उपज देखें और ऑफ़र दें', mr: 'माल पाहा आणि ऑफर द्या' },
+  reviewPlatform: { en: 'Review platform activity', hi: 'प्लेटफ़ॉर्म गतिविधि देखें', mr: 'प्लॅटफॉर्मवरील हालचाली पहा' },
+  demoProfilesOnly: { en: 'Demo profiles only. Changes are saved in this browser, not on a live server.', hi: 'केवल डेमो प्रोफ़ाइल। बदलाव इसी ब्राउज़र में सहेजे जाते हैं, लाइव सर्वर पर नहीं।', mr: 'फक्त डेमो प्रोफाइल. बदल या ब्राउझरमध्ये जतन होतात, लाइव्ह सर्व्हरवर नाहीत.' },
+  allOffers: { en: 'All offers', hi: 'सभी ऑफ़र', mr: 'सर्व ऑफर्स' },
+  awaitingResponse: { en: 'Awaiting response', hi: 'जवाब की प्रतीक्षा', mr: 'उत्तराची प्रतीक्षा' },
+  acceptedThisMonth: { en: 'Accepted this month', hi: 'इस महीने स्वीकार किए गए', mr: 'या महिन्यात स्वीकारलेले' },
+  acrossActiveListings: { en: 'Across active listings', hi: 'सक्रिय लिस्टिंग पर', mr: 'सक्रिय नोंदींमध्ये' },
+  readyForAttention: { en: 'Ready for your attention', hi: 'आपकी कार्रवाई की प्रतीक्षा', mr: 'तुमच्या कृतीची प्रतीक्षा' },
+  dealsMovingForward: { en: 'Deals moving forward', hi: 'आगे बढ़ते सौदे', mr: 'पुढे जाणारे व्यवहार' },
+  recentOffers: { en: 'Recent offers', hi: 'हाल के ऑफ़र', mr: 'अलीकडील ऑफर्स' },
+  offerPartnership: { en: 'Every offer is a chance to build a better partnership.', hi: 'हर ऑफ़र बेहतर साझेदारी बनाने का अवसर है।', mr: 'प्रत्येक ऑफर चांगली भागीदारी निर्माण करण्याची संधी आहे.' },
+  proposedPrice: { en: 'Proposed price', hi: 'प्रस्तावित भाव', mr: 'प्रस्तावित दर' },
+  accept: { en: 'Accept', hi: 'स्वीकारें', mr: 'स्वीकारा' },
+  decline: { en: 'Decline', hi: 'अस्वीकार करें', mr: 'नाकारा' },
+  makeOffer: { en: 'Make an offer', hi: 'ऑफ़र दें', mr: 'ऑफर द्या' },
+  sendOffer: { en: 'Send offer', hi: 'ऑफ़र भेजें', mr: 'ऑफर पाठवा' },
+  offerPerQuintal: { en: 'Your offer per quintal (₹)', hi: 'आपका प्रति क्विंटल ऑफ़र (₹)', mr: 'तुमची प्रति क्विंटल ऑफर (₹)' },
+  quantityQuintals: { en: 'Quantity (quintals)', hi: 'मात्रा (क्विंटल)', mr: 'प्रमाण (क्विंटल)' },
+  dealAccepted: { en: 'Offer accepted. The buyer can now see the updated deal.', hi: 'ऑफ़र स्वीकार हुआ। खरीदार अब अपडेट किया गया सौदा देख सकता है।', mr: 'ऑफर स्वीकारली. खरेदीदार आता अद्ययावत व्यवहार पाहू शकतो.' },
+  dealDeclined: { en: 'Offer declined.', hi: 'ऑफ़र अस्वीकार किया गया।', mr: 'ऑफर नाकारली.' },
+  offerSent: { en: 'Offer sent to {seller}.', hi: '{seller} को ऑफ़र भेज दिया गया।', mr: '{seller} यांना ऑफर पाठवली.' },
+  dealStatus: { en: 'Deal status: {status}', hi: 'सौदे की स्थिति: {status}', mr: 'व्यवहाराची स्थिती: {status}' },
+  yourTradeGoodHands: { en: 'Your trade, in good hands.', hi: 'आपका व्यापार सुरक्षित हाथों में।', mr: 'तुमचा व्यवहार सुरक्षित हातात.' },
+  stayUpdated: { en: 'Stay up to date with the milestones that matter.', hi: 'महत्वपूर्ण पड़ावों की जानकारी पाते रहें।', mr: 'महत्त्वाच्या टप्प्यांबद्दल अद्ययावत राहा.' },
+  orderHistory: { en: 'Order history', hi: 'ऑर्डर इतिहास', mr: 'ऑर्डर इतिहास' },
+  allTrades: { en: 'All your current and completed trades in one place.', hi: 'आपके सभी वर्तमान और पूरे हुए सौदे एक ही जगह।', mr: 'तुमचे सर्व सध्याचे आणि पूर्ण झालेले व्यवहार एकाच ठिकाणी.' },
+  allOrders: { en: 'All orders', hi: 'सभी ऑर्डर', mr: 'सर्व ऑर्डर्स' },
+  trackOrder: { en: 'Track order', hi: 'ऑर्डर ट्रैक करें', mr: 'ऑर्डरचा मागोवा घ्या' },
+  searchUsers: { en: 'Search users...', hi: 'उपयोगकर्ता खोजें...', mr: 'वापरकर्ते शोधा...' },
+  exportList: { en: 'Export list', hi: 'सूची एक्सपोर्ट करें', mr: 'यादी एक्सपोर्ट करा' },
+  readGuide: { en: 'Read guide', hi: 'गाइड पढ़ें', mr: 'मार्गदर्शक वाचा' },
+  fpoGuide: { en: 'FPO guide', hi: 'FPO गाइड', mr: 'FPO मार्गदर्शक' },
+  buyerGuide: { en: 'Buyer guide', hi: 'खरीदार गाइड', mr: 'खरेदीदार मार्गदर्शक' },
+  accountSecurity: { en: 'Account & security', hi: 'खाता और सुरक्षा', mr: 'खाते आणि सुरक्षा' },
+  listProduceHelp: { en: 'Learn how to list produce, review offers, and manage orders.', hi: 'उपज लिस्ट करना, ऑफ़र देखना और ऑर्डर संभालना सीखें।', mr: 'मालाची नोंद करणे, ऑफर्स पाहणे आणि ऑर्डर व्यवस्थापित करणे शिका.' },
+  buyerHelp: { en: 'Find produce, make offers, and track your purchases.', hi: 'उपज खोजें, ऑफ़र दें और खरीद पर नज़र रखें।', mr: 'माल शोधा, ऑफर द्या आणि खरेदीचा मागोवा घ्या.' },
+  accountHelp: { en: 'Manage your account details and sign-in preferences.', hi: 'अपने खाते और साइन-इन की प्राथमिकताएँ संभालें।', mr: 'खात्याचे तपशील आणि साइन-इन प्राधान्ये व्यवस्थापित करा.' },
+  contactSupport: { en: 'Contact support', hi: 'सहायता से संपर्क करें', mr: 'मदतीसाठी संपर्क करा' },
+  stillNeedHuman: { en: 'Still need a human?', hi: 'क्या आपको अभी भी मदद चाहिए?', mr: 'अजूनही मदत हवी आहे का?' },
+  supportCanHelp: { en: 'Our support team can help you find your feet.', hi: 'हमारी सहायता टीम आपको शुरुआत करने में मदद कर सकती है।', mr: 'आमची मदत टीम तुम्हाला सुरुवात करण्यात मदत करू शकते.' },
+  frontendPreview: { en: 'Frontend preview', hi: 'फ्रंटएंड प्रीव्यू', mr: 'फ्रंटएंड प्रीव्ह्यू' },
+  vsLastMonth: { en: 'vs. last month', hi: 'पिछले महीने की तुलना में', mr: 'मागील महिन्याच्या तुलनेत' },
+  marketsActive: { en: 'Markets active', hi: 'बाज़ार सक्रिय', mr: 'बाजार सुरू' },
+  needHand: { en: 'Need a hand?', hi: 'मदद चाहिए?', mr: 'मदत हवी आहे?' },
+  helpGrowBusiness: { en: "We're here to help your business grow.", hi: 'हम आपके व्यवसाय को आगे बढ़ाने में मदद के लिए यहाँ हैं।', mr: 'तुमचा व्यवसाय वाढवण्यासाठी आम्ही मदतीला आहोत.' },
+  visitHelpCentre: { en: 'Visit help centre', hi: 'सहायता केंद्र देखें', mr: 'मदत केंद्राला भेट द्या' },
+
 };
 
 export function translate(lang, key, vars) {
-  const entry = dict[key];
+  const entry = dict[key] || Object.values(dict).find((item) => item.en === key);
   if (!entry) return key;
   let text = entry[lang] || entry.en || key;
-  if (vars) {
-    Object.keys(vars).forEach((k) => {
-      text = text.replace(new RegExp(`\\{${k}\\}`, 'g'), vars[k]);
-    });
-  }
+  if (vars) Object.keys(vars).forEach((k) => { text = text.replace(new RegExp('\\{' + k + '\\}', 'g'), vars[k]); });
   return text;
 }
 
-export default dict;
+export function translateVisibleText(lang, value) {
+  if (!value || lang === 'en') return value;
+  let output = value;
+  const entries = Object.values(dict).filter((entry) => entry.en && entry[lang] && entry.en.length > 2).sort((a, b) => b.en.length - a.en.length);
+  for (const entry of entries) {
+    if (output === entry.en) return entry[lang];
+    if (output.includes(entry.en)) output = output.split(entry.en).join(entry[lang]);
+  }
+  return output;
+}
+
+export { dict as translations };
