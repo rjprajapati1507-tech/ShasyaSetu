@@ -10,7 +10,7 @@ export const LANGUAGES = [
 
 const dict = {
   // ---------- Common / brand ----------
-  appName: { en: 'MandiSetu', hi: 'मंडीसेतु', mr: 'मंडीसेतू' },
+  appName: { en: 'ShasyaSetu', hi: 'शस्यसेतु', mr: 'शस्यसेतू' },
   appTagline: { en: 'Farm to buyer, transparently', hi: 'खेत से खरीदार तक, पारदर्शी तरीके से', mr: 'शेतापासून खरेदीदारापर्यंत, पारदर्शकपणे' },
   demoBuild: { en: 'DEMO BUILD', hi: 'डेमो वर्शन', mr: 'डेमो आवृत्ती' },
   cancel: { en: 'Cancel', hi: 'रद्द करें', mr: 'रद्द करा' },
@@ -24,6 +24,10 @@ const dict = {
   fpoOrgLine: { en: '12 members · Nashik dist.', hi: '12 सदस्य · नासिक ज़िला', mr: '12 सदस्य · नाशिक जिल्हा' },
   verifiedBuyerLine: { en: 'Verified buyer', hi: 'सत्यापित खरीदार', mr: 'सत्यापित खरेदीदार' },
   language: { en: 'Language', hi: 'भाषा', mr: 'भाषा' },
+  portal: { en: 'Choose portal', hi: 'पोर्टल चुनें', mr: 'पोर्टल निवडा' },
+  primaryNavigation: { en: 'Primary navigation', hi: 'मुख्य नेविगेशन', mr: 'मुख्य नेव्हिगेशन' },
+  workspaceMenu: { en: 'Workspace', hi: 'कार्यस्थान', mr: 'कार्यस्थान' },
+  secureWorkspace: { en: 'Your workspace at a glance', hi: 'आपका कार्यस्थान', mr: 'तुमचे कार्यस्थान' },
 
   // ---------- Sidebar nav ----------
   navPriceIntel: { en: 'Price intelligence', hi: 'भाव जानकारी', mr: 'भाव माहिती' },
