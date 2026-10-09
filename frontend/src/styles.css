@@ -543,3 +543,31 @@ button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{ou
 .auth-mobile-language{display:none}
 @media(max-width:620px){.auth-brand-row>.language-select{display:none}.auth-mobile-language{display:flex;justify-content:flex-end;margin:-2px 0 12px}.auth-mobile-language .language-select{border-color:#e1e8dc;background:#fff;color:#4b634d}}
 @media(max-width:420px){.language-compact{gap:4px;padding:6px}.language-compact>span{display:none}.language-compact select{max-width:75px;font-size:10px}.topbar-actions{gap:7px}}
+
+
+/* Profile, demo account shortcuts, and deal-testing UI */
+.demo-accounts{margin-top:18px;padding:16px;border:1px solid #e4e9dd;border-radius:14px;background:#fbfcf8}
+.demo-accounts h3{margin:0 0 5px;font-size:14px;color:#20392b}
+.demo-accounts>p{margin:0 0 12px;font-size:12px;line-height:1.5;color:#69776b}
+.demo-account-grid{display:grid;grid-template-columns:1fr;gap:8px}
+.demo-account-grid button{display:flex;flex-direction:column;align-items:flex-start;gap:4px;text-align:left;padding:11px 12px;border:1px solid #e0e7dc;border-radius:10px;background:#fff;color:#23392d;cursor:pointer;transition:border-color .15s,background .15s}
+.demo-account-grid button:hover,.demo-account-grid button:focus-visible{border-color:#4a8a5c;background:#f4f9f1;outline:2px solid transparent}
+.demo-account-grid button strong{font-size:12px}
+.demo-account-grid button small{font-size:11px;color:#68776c}
+.demo-account-grid button span{margin-top:3px;font-size:11px;font-weight:650;color:#286a43}
+.demo-disclaimer{display:block;margin-top:10px;font-size:10px;line-height:1.5;color:#788278}
+.profile-layout{display:grid;grid-template-columns:minmax(240px,.8fr) minmax(300px,1.2fr);gap:18px;align-items:start}
+.profile-summary,.profile-edit{padding:24px}
+.profile-large-avatar{display:grid;place-items:center;width:72px;height:72px;border-radius:22px;background:#e1eee1;color:#286744;font-size:30px;font-weight:750}
+.profile-summary h2{margin:18px 0 4px;font-size:23px;color:#1c3326}
+.profile-summary>p{margin:0 0 14px;color:#68776c;overflow-wrap:anywhere}
+.profile-facts{display:grid;gap:0;margin-top:22px}
+.profile-facts>div{display:flex;flex-direction:column;gap:5px;padding:13px 0;border-top:1px solid #e9ece4}
+.profile-facts small{font-size:11px;color:#7a867b}
+.profile-facts strong{font-size:13px;color:#293a2f;overflow-wrap:anywhere}
+.profile-edit h3{margin:0 0 6px;font-size:18px}
+.profile-edit>p{margin:0 0 18px;color:#69766b;font-size:13px}
+.profile-edit .field{margin-bottom:14px}
+.profile-edit input[readonly]{background:#f0f2ed;color:#68756a;cursor:not-allowed}
+.status-rejected{background:#f8e6e1;color:#963d2e}
+@media(max-width:760px){.profile-layout{grid-template-columns:1fr}.profile-summary,.profile-edit{padding:18px}.demo-accounts{padding:12px}}
