@@ -8,7 +8,7 @@ export default function TopBar({ role, onRoleChange }) {
   return (
     <div className="topbar">
       <div className="brand">
-        <div className="brand-mark">MS</div>
+        <div className="brand-mark" aria-hidden="true">SS</div>
         <div>
           <div className="brand-name">{t('appName')}</div>
           <div className="brand-tag">{t('appTagline')} — {t('demoBuild')}</div>
