@@ -19,11 +19,12 @@ export default function Sidebar({ role, view, onNavigate, lotCount, offerCount }
   const items = role === 'fpo' ? FPO_ITEMS : BUYER_ITEMS;
   const badgeValue = { lots: lotCount, offers: offerCount };
   return (
-    <div className="sidebar">
+    <nav className="sidebar" aria-label="Primary navigation">
       {items.map((item) => (
         <button
           key={item.view}
           className={`nav-item ${view === item.view ? 'active' : ''}`}
+          aria-current={view === item.view ? 'page' : undefined}
           onClick={() => onNavigate(item.view)}
         >
           <span>{item.icon}&nbsp;&nbsp;{item.label}</span>
@@ -33,11 +34,11 @@ export default function Sidebar({ role, view, onNavigate, lotCount, offerCount }
       {role === 'fpo' && (
         <>
           <div className="sidebar-label">{t('sidebarSupport')}</div>
-          <button className={`nav-item ${view === 'fpo-help' ? 'active' : ''}`} onClick={() => onNavigate('fpo-help')}>
+          <button className={`nav-item ${view === 'fpo-help' ? 'active' : ''}`} aria-current={view === 'fpo-help' ? 'page' : undefined} onClick={() => onNavigate('fpo-help')}>
             <span>☎️&nbsp;&nbsp;{t('navHelp')}</span>
           </button>
         </>
       )}
-    </div>
+    </nav>
   );
 }

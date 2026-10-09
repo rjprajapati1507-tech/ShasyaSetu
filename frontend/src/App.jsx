@@ -161,11 +161,12 @@ export default function App() {
 
   return (
     <>
+      <a className="skip-link" href="#main-content">Skip to main content</a>
       <Ticker />
       <TopBar role={role} onRoleChange={handleRoleChange} />
       <div className="app">
         <Sidebar role={role} view={view} onNavigate={setView} lotCount={lotCount} offerCount={offerCount} />
-        <div className="content">
+        <main className="content" id="main-content" tabIndex="-1">
           {role === 'fpo' && view === 'fpo-prices' && <PriceIntelligence onContinueToCreateLot={handleContinueToCreateLot} />}
           {role === 'fpo' && view === 'fpo-lots' && <MyLots lots={lots} onCreateNew={() => { setCreateLotPrefill(null); setCreateLotOpen(true); }} />}
           {role === 'fpo' && view === 'fpo-offers' && <Offers lots={lots} onAccept={handleAcceptOffer} onReject={handleRejectOffer} />}
@@ -174,7 +175,7 @@ export default function App() {
           {role === 'buyer' && view === 'buyer-market' && <Marketplace lots={lots} onMakeOffer={setOfferModalLotId} />}
           {role === 'buyer' && view === 'buyer-offers' && <MyOffers lots={lots} currentBuyerId={CURRENT_BUYER.id} />}
           {role === 'buyer' && view === 'buyer-orders' && <OrdersPayments orders={orders} isFpoView={false} onAdvance={handleAdvanceOrder} onRate={setRateOrderId} onDispute={setDisputeOrderId} />}
-        </div>
+        </main>
       </div>
 
       <CreateLotModal

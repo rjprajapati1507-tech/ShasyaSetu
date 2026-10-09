@@ -81,9 +81,9 @@ export default function PriceIntelligence({ onContinueToCreateLot }) {
         <p className="si-form-desc">{t('farmerInputDesc')}</p>
         <form onSubmit={handleSubmit}>
           <div className="si-field-row">
-            <div className="field"><label>{t('labelCrop')}</label><input name="crop" value={values.crop} onChange={handleChange} required /></div>
-            <div className="field"><label>{t('labelQuantityKg')}</label><input name="quantity_kg" type="number" min="1" step="1" value={values.quantity_kg} onChange={handleChange} required /></div>
-            <div className="field"><label>{t('labelFarmerLocation')}</label><input name="location" value={values.location} onChange={handleChange} required /></div>
+            <div className="field"><label htmlFor="recommendation-crop">{t('labelCrop')}</label><input id="recommendation-crop" name="crop" value={values.crop} onChange={handleChange} required /></div>
+            <div className="field"><label htmlFor="recommendation-quantity">{t('labelQuantityKg')}</label><input id="recommendation-quantity" name="quantity_kg" type="number" min="1" step="1" value={values.quantity_kg} onChange={handleChange} required /></div>
+            <div className="field"><label htmlFor="recommendation-location">{t('labelFarmerLocation')}</label><input id="recommendation-location" name="location" value={values.location} onChange={handleChange} required /></div>
           </div>
           <button type="submit" className="btn btn-primary" disabled={loading}>
             {loading ? t('findingMarkets') : t('getRecommendation')}
@@ -93,11 +93,11 @@ export default function PriceIntelligence({ onContinueToCreateLot }) {
       </div>
 
       {loading && (
-        <div className="card"><div className="hint-banner">{t('fetchingRecommendation')}</div></div>
+        <div className="card" role="status" aria-live="polite"><div className="hint-banner">{t('fetchingRecommendation')}</div></div>
       )}
 
       {!loading && error && (
-        <div className="card">
+        <div className="card" role="alert">
           <div className="hint-banner" style={{ background: 'var(--red-100)', borderColor: 'var(--red-100)', color: 'var(--red-700)' }}>
             {t('recommendationUnavailable')} {error}
           </div>
