@@ -1,7 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import Ticker from './components/Ticker';
-import TopBar from './components/TopBar';
-import Sidebar from './components/Sidebar';
+import WorkspaceLayout from './layouts/WorkspaceLayout';
 import Toast from './components/Toast';
 import CreateLotModal from './components/modals/CreateLotModal';
 import MakeOfferModal from './components/modals/MakeOfferModal';
@@ -161,22 +159,16 @@ export default function App() {
 
   return (
     <>
-      <a className="skip-link" href="#main-content">Skip to main content</a>
-      <Ticker />
-      <TopBar role={role} onRoleChange={handleRoleChange} />
-      <div className="app">
-        <Sidebar role={role} view={view} onNavigate={setView} lotCount={lotCount} offerCount={offerCount} />
-        <main className="content" id="main-content" tabIndex="-1">
-          {role === 'fpo' && view === 'fpo-prices' && <PriceIntelligence onContinueToCreateLot={handleContinueToCreateLot} />}
-          {role === 'fpo' && view === 'fpo-lots' && <MyLots lots={lots} onCreateNew={() => { setCreateLotPrefill(null); setCreateLotOpen(true); }} />}
-          {role === 'fpo' && view === 'fpo-offers' && <Offers lots={lots} onAccept={handleAcceptOffer} onReject={handleRejectOffer} />}
-          {role === 'fpo' && view === 'fpo-orders' && <OrdersPayments orders={orders} isFpoView onAdvance={handleAdvanceOrder} onRate={setRateOrderId} onDispute={setDisputeOrderId} />}
-          {role === 'fpo' && view === 'fpo-help' && <Help />}
-          {role === 'buyer' && view === 'buyer-market' && <Marketplace lots={lots} onMakeOffer={setOfferModalLotId} />}
-          {role === 'buyer' && view === 'buyer-offers' && <MyOffers lots={lots} currentBuyerId={CURRENT_BUYER.id} />}
-          {role === 'buyer' && view === 'buyer-orders' && <OrdersPayments orders={orders} isFpoView={false} onAdvance={handleAdvanceOrder} onRate={setRateOrderId} onDispute={setDisputeOrderId} />}
-        </main>
-      </div>
+      <WorkspaceLayout role={role} view={view} onRoleChange={handleRoleChange} onNavigate={setView} lotCount={lotCount} offerCount={offerCount}>
+        {role === 'fpo' && view === 'fpo-prices' && <PriceIntelligence onContinueToCreateLot={handleContinueToCreateLot} />}
+        {role === 'fpo' && view === 'fpo-lots' && <MyLots lots={lots} onCreateNew={() => { setCreateLotPrefill(null); setCreateLotOpen(true); }} />}
+        {role === 'fpo' && view === 'fpo-offers' && <Offers lots={lots} onAccept={handleAcceptOffer} onReject={handleRejectOffer} />}
+        {role === 'fpo' && view === 'fpo-orders' && <OrdersPayments orders={orders} isFpoView onAdvance={handleAdvanceOrder} onRate={setRateOrderId} onDispute={setDisputeOrderId} />}
+        {role === 'fpo' && view === 'fpo-help' && <Help />}
+        {role === 'buyer' && view === 'buyer-market' && <Marketplace lots={lots} onMakeOffer={setOfferModalLotId} />}
+        {role === 'buyer' && view === 'buyer-offers' && <MyOffers lots={lots} currentBuyerId={CURRENT_BUYER.id} />}
+        {role === 'buyer' && view === 'buyer-orders' && <OrdersPayments orders={orders} isFpoView={false} onAdvance={handleAdvanceOrder} onRate={setRateOrderId} onDispute={setDisputeOrderId} />}
+      </WorkspaceLayout>
 
       <CreateLotModal
         open={createLotOpen}
