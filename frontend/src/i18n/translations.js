@@ -354,6 +354,35 @@ const dict = {
   weeklyActivitySummary: { en: 'Weekly activity summary', hi: 'साप्ताहिक गतिविधि सारांश', mr: 'साप्ताहिक क्रियाकलाप सारांश' },
   growTogether: { en: 'Growing better, together.', hi: 'साथ मिलकर बेहतर विकास।', mr: 'एकत्र अधिक चांगली प्रगती.' },
 
+
+  activeListingsTitle: { en: 'Your active listings', hi: 'आपकी सक्रिय लिस्टिंग', mr: 'तुमच्या सक्रिय नोंदी' },
+  keepEyeOnProduce: { en: 'Keep an eye on the produce you have listed.', hi: 'आपकी सूचीबद्ध उपज पर नज़र रखें।', mr: 'तुम्ही नोंदवलेल्या मालावर लक्ष ठेवा.' },
+  seeAll: { en: 'See all', hi: 'सभी देखें', mr: 'सर्व पहा' },
+  recentActivityTitle: { en: 'Recent activity', hi: 'हाल की गतिविधियाँ', mr: 'अलीकडील घडामोडी' },
+  littleMovement: { en: 'A little movement goes a long way.', hi: 'छोटी-छोटी गतिविधियाँ भी बड़ा बदलाव लाती हैं।', mr: 'छोट्या हालचालींमधूनही मोठा बदल घडतो.' },
+  live: { en: 'LIVE', hi: 'लाइव', mr: 'थेट' },
+  newOfferReceived: { en: 'New offer received', hi: 'नया ऑफ़र प्राप्त हुआ', mr: 'नवीन ऑफर प्राप्त झाली' },
+  listingApproved: { en: 'Listing approved', hi: 'लिस्टिंग स्वीकृत हुई', mr: 'नोंद मंजूर झाली' },
+  orderUpdate: { en: 'Order update', hi: 'ऑर्डर अपडेट', mr: 'ऑर्डर अपडेट' },
+  wheatPriceChanged: { en: 'Wheat price changed', hi: 'गेहूँ का भाव बदला', mr: 'गव्हाचा दर बदलला' },
+  seeAllActivity: { en: 'See all activity', hi: 'सभी गतिविधियाँ देखें', mr: 'सर्व घडामोडी पहा' },
+  perQuintal: { en: 'per quintal', hi: 'प्रति क्विंटल', mr: 'प्रति क्विंटल' },
+  quintals: { en: 'quintals', hi: 'क्विंटल', mr: 'क्विंटल' },
+  minsAgo: { en: 'min ago', hi: 'मिनट पहले', mr: 'मिनिटांपूर्वी' },
+  hrAgo: { en: 'hr ago', hi: 'घंटे पहले', mr: 'तासांपूर्वी' },
+  hrsAgo: { en: 'hrs ago', hi: 'घंटे पहले', mr: 'तासांपूर्वी' },
+  yesterday: { en: 'Yesterday', hi: 'कल', mr: 'काल' },
+  offerReceived: { en: 'Offer received', hi: 'ऑफ़र प्राप्त हुआ', mr: 'ऑफर प्राप्त झाली' },
+  priceUpBy: { en: 'Wheat prices up by 2.4%.', hi: 'गेहूँ के भाव में 2.4% की बढ़ोतरी।', mr: 'गव्हाच्या दरात 2.4% वाढ.' },
+  cottonShipment: { en: 'Cotton shipment is on the way', hi: 'कपास की खेप रास्ते में है', mr: 'कापसाची खेप मार्गावर आहे' },
+  needAction: { en: 'need action', hi: 'कार्रवाई आवश्यक', mr: 'कृती आवश्यक' },
+  comparedWithLastMonth: { en: 'vs. last month', hi: 'पिछले महीने की तुलना में', mr: 'मागील महिन्याच्या तुलनेत' },
+  yourFarmingBusiness: { en: 'YOUR FARMING BUSINESS', hi: 'आपका कृषि व्यवसाय', mr: 'तुमचा शेती व्यवसाय' },
+  yourSourcingDesk: { en: 'YOUR SOURCING DESK', hi: 'आपकी खरीद डेस्क', mr: 'तुमचे खरेदी कार्यक्षेत्र' },
+  platformControl: { en: 'PLATFORM CONTROL', hi: 'प्लेटफ़ॉर्म नियंत्रण', mr: 'प्लॅटफॉर्म नियंत्रण' },
+  marketActive: { en: 'Market active', hi: 'बाज़ार सक्रिय', mr: 'बाजार सक्रिय' },
+  frontendPreviewFooter: { en: 'Frontend preview', hi: 'फ्रंटएंड प्रीव्यू', mr: 'फ्रंटएंड प्रीव्ह्यू' },
+
 };
 
 export function translate(lang, key, vars) {
